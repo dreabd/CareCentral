@@ -1,6 +1,6 @@
 from flask import Blueprint,request
 from flask_login import current_user,login_required
-from app.models import db,Patient
+from app.models import db,Patient,Note
 
 from app.forms.patient_form import EditPatientForm,PatinentAddressForm,PatientNotesForm
 
@@ -23,6 +23,38 @@ def get_all_patients():
 
     # Sends the JSON Object
     return{"patients": patients}
+
+
+# Add Note to a patient
+@patient_routes.route("/<int:id>/note",methods=["POST"])
+@login_required
+def add_patient_note(id):
+    '''
+    This route will allow providers to add notes to a patient's profile
+    '''
+
+    patient = Patient.query.filter(Patient.id == id).first()
+
+    if(current_user.id != patient.provider_id):
+        return{"error":"unauthorized"},401
+
+    form = PatientNotesForm()
+    form["csrf_token"].data = request.cookies["csrf_token"]
+
+    if form.validate_on_submit():
+        data = form.data
+        new_note = Note(
+            text=data["text"],
+            patient_id = id
+        )
+        print("👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀",new_note)
+
+        db.session.add(new_note)
+        db.session.commit()
+        return {"newNote":new_note.to_dict()}
+
+    if form.errors:
+        return{"errors":form.errors},400
 
 # Get Single Patient Info
 @patient_routes.route("/<int:id>")
@@ -90,5 +122,39 @@ def put_single_patient(id):
 # Edit a Single Patient Address
 # Add an Address to a Single Patient
 
-# Add Note to a patient
 # Edit Patient Note
+@patient_routes.route("/<int:id>/note/<int:note_id>",methods=["PUT"])
+@login_required
+def edit_patient_note(id,note_id):
+    '''
+    This will allow providers to edit notes that have made in the past
+    '''
+
+    patient = Patient.query.filter(Patient.id == id).first()
+    edited_note = Note.query.filter(Note.id == note_id).first()
+
+    if patient is None:
+        return {"errors": "Patient Could not be found"},404
+
+    if edited_note is None:
+        return {"errors": "Note Could not be found"},404
+
+    if (current_user.id != patient.provider_id):
+        return{"Error":"Unauthorized"},401
+
+    form = PatientNotesForm()
+    form["csrf_token"].data = request.cookies["csrf_token"]
+
+    if form.validate_on_submit():
+        data = form.data
+
+        if data["text"]:
+            edited_note.text = data["text"]
+
+        db.session.commit()
+        return{"note": edited_note.to_dict()}
+
+    if form.errors:
+        return{"errors":form.errors},400
+
+
