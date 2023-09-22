@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField,IntegerField,DateField,BooleanField
-from wtforms.validators import DataRequired, Email, ValidationError
+from wtforms.validators import DataRequired
 
 class EditPatientForm(FlaskForm):
   first_name = StringField("first_name" ,validators=[DataRequired()])
@@ -14,7 +14,7 @@ class PatinentAddressForm(FlaskForm):
   address = StringField("address", validators=[DataRequired()])
   city = StringField("address", validators=[DataRequired()])
   state = StringField("address", validators=[DataRequired()])
-  isCurrent = BooleanField("isCurrent", validators=[DataRequired()], default=True)
+  isCurrent = BooleanField("isCurrent", validators=[], default=True)
 
 class PatientNotesForm(FlaskForm):
   text = StringField("text",validators=[DataRequired()])

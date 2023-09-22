@@ -1,6 +1,6 @@
 from flask import Blueprint,request
 from flask_login import current_user,login_required
-from app.models import db,Patient,Note
+from app.models import db,Patient,Note,Address
 
 from app.forms.patient_form import EditPatientForm,PatinentAddressForm,PatientNotesForm
 
@@ -47,11 +47,46 @@ def add_patient_note(id):
             text=data["text"],
             patient_id = id
         )
-        print("👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀",new_note)
-
         db.session.add(new_note)
         db.session.commit()
         return {"newNote":new_note.to_dict()}
+
+    if form.errors:
+        return{"errors":form.errors},400
+
+# Add an Address to a Single Patient
+@patient_routes.route("/<int:id>/address",methods=["POST"])
+@login_required
+def add_patient_address(id):
+    '''
+    This route will allow a provider to add an address to the patients profile
+    '''
+
+    patient = Patient.query.filter(Patient.id == id).first()
+
+    if patient is None:
+        return {"errors": "Patient Could not be found"},404
+    
+    if (current_user.id != patient.provider_id):
+        return{"Error":"Unauthorized"},401
+    
+    form = PatinentAddressForm()
+    form["csrf_token"].data = request.cookies["csrf_token"]
+    
+    if form.validate_on_submit():
+        data = form.data
+
+        new_address = Address(
+            address = data["address"],
+            city = data["city"],
+            state = data["state"],
+            isCurrent = data["isCurrent"],
+            patient_id = id
+        )
+
+        db.session.add(new_address)
+        db.session.commit()
+        return {"newNote":new_address.to_dict()}
 
     if form.errors:
         return{"errors":form.errors},400
@@ -79,7 +114,7 @@ def get_single_patient(id):
 # Edit a Single Patient's Information
 @patient_routes.route('/<int:id>',methods=["PUT"])
 @login_required
-def put_single_patient(id):
+def edit_single_patient(id):
     '''
     ONLY THE CURRENT PROVIDER COULD ADJUST ASPECTS OF A PATIENTS INFO
     This route will allow the current provider change a patient's information
@@ -118,9 +153,46 @@ def put_single_patient(id):
 
     if form.errors:
         return{"errors":form.errors},400
+    
 
 # Edit a Single Patient Address
-# Add an Address to a Single Patient
+@patient_routes.route("<int:id>/address/<int:address_id>",methods=["PUT"])
+@login_required
+def edit_patient_address(id,address_id):
+    '''
+    Proividers will be able to edit address that they previously added
+    '''
+    patient = Patient.query.filter(Patient.id == id).first()
+    editted_address = Address.query.filter(Address.id == address_id).first()
+
+    if patient is None:
+        return {"errors": "Patient Could not be found"},404
+
+    if (current_user.id != patient.provider_id):
+        return{"Error":"Unauthorized"},401
+    
+    if editted_address is None:
+        return {"errors": "Address Could not be found"},404
+
+    form = PatinentAddressForm()
+    form["csrf_token"].data = request.cookies["csrf_token"]
+
+    if form.validate_on_submit():
+        data = form.data
+        if data["address"]:
+            editted_address.address = data["address"]
+        if data["city"]:
+            editted_address.city = data["city"]
+        if data["state"]:
+            editted_address.state = data["state"]
+        if data["isCurrent"]:
+            editted_address.isCurrent = data["isCurrent"]
+
+        db.session.commit()
+        return {"address": editted_address.to_dict()}
+
+    if form.errors:
+        return{"errors":form.errors},400
 
 # Edit Patient Note
 @patient_routes.route("/<int:id>/note/<int:note_id>",methods=["PUT"])
