@@ -74,16 +74,9 @@ def add_patient_note(id):
 
     if form.validate_on_submit():
         data = form.data
-<<<<<<< HEAD
-        new_note = Note(
-            text=data["text"],
-            patient_id = id
-        )
-=======
         new_note = Note(title=data["title"], text=data["text"], patient_id=id)
         print("👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀", new_note)
 
->>>>>>> dev
         db.session.add(new_note)
         db.session.commit()
         return {"newNote": new_note.to_dict()}
@@ -189,13 +182,8 @@ def get_single_patient(id):
 # Edit a Single Patient's Information
 @patient_routes.route("/<int:id>", methods=["PUT"])
 @login_required
-<<<<<<< HEAD
-def edit_single_patient(id):
-    '''
-=======
 def put_single_patient(id):
     """
->>>>>>> dev
     ONLY THE CURRENT PROVIDER COULD ADJUST ASPECTS OF A PATIENTS INFO
     This route will allow the current provider change a patient's information
     """
@@ -232,13 +220,8 @@ def put_single_patient(id):
         return {"patient": patient.to_dict()}
 
     if form.errors:
-<<<<<<< HEAD
-        return{"errors":form.errors},400
-    
-=======
         return {"errors": form.errors}, 400
 
->>>>>>> dev
 
 # Edit a Single Patient Address
 @patient_routes.route("<int:id>/address/<int:address_id>",methods=["PUT"])
