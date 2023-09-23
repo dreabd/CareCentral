@@ -8,6 +8,11 @@ Create Date: 2023-09-17 19:38:10.863059
 from alembic import op
 import sqlalchemy as sa
 
+import os
+environment = os.getenv("FLASK_ENV")
+SCHEMA = os.environ.get("SCHEMA")
+
+
 
 # revision identifiers, used by Alembic.
 revision = '228c1a88ca23'
@@ -24,6 +29,8 @@ def upgrade():
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('status_type')
     )
+    if environment == "production":
+        op.execute(f"ALTER TABLE statuses SET SCHEMA {SCHEMA};")
     op.create_table('users',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('username', sa.String(length=40), nullable=False),
@@ -33,6 +40,8 @@ def upgrade():
     sa.UniqueConstraint('email'),
     sa.UniqueConstraint('username')
     )
+    if environment == "production":
+        op.execute(f"ALTER TABLE statuses SET SCHEMA {SCHEMA};")
     op.create_table('patients',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('first_name', sa.String(length=55), nullable=False),
@@ -46,6 +55,8 @@ def upgrade():
     sa.ForeignKeyConstraint(['status_id'], ['statuses.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    if environment == "production":
+        op.execute(f"ALTER TABLE patients SET SCHEMA {SCHEMA};")
     op.create_table('addresses',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('patient_id', sa.Integer(), nullable=False),
@@ -56,6 +67,8 @@ def upgrade():
     sa.ForeignKeyConstraint(['patient_id'], ['patients.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    if environment == "production":
+        op.execute(f"ALTER TABLE addresses SET SCHEMA {SCHEMA};")
     op.create_table('notes',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('patient_id', sa.Integer(), nullable=False),
@@ -64,6 +77,8 @@ def upgrade():
     sa.ForeignKeyConstraint(['patient_id'], ['patients.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
+    if environment == "production":
+        op.execute(f"ALTER TABLE notes SET SCHEMA {SCHEMA};")
     # ### end Alembic commands ###
 
 
