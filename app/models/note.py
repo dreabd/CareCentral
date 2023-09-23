@@ -18,7 +18,7 @@ class Note(db.Model):
         nullable=False,
         )
     title = db.Column(db.String(50),server_default="Note")
-    text = db.Column(db.Text(300),nullable=False)
+    text = db.Column(db.Text(),nullable=False)
     created_at =  db.Column(db.DateTime,nullable=False,default=datetime.utcnow)
     # --------------------------------------------------
 
