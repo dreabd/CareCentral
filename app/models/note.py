@@ -28,6 +28,8 @@ class Note(db.Model):
     # Function to return an JSON object
     def to_dict(self):
         return{
+            "id":self.id,
+            "title":self.title,
             "text":self.text,
             "created_at":self.created_at
         }

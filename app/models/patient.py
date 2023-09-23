@@ -49,6 +49,7 @@ class Patient(db.Model):
     # Function to return an JSON object for Get All Patients
     def to_dict(self):
         return{
+            "id":self.id,
             "first_name": self.first_name,
             "middle_name": self.middle_name,
             "last_name": self.last_name,
@@ -60,6 +61,7 @@ class Patient(db.Model):
     # Functio to return a JSON Object for Get Single Patient
     def single_patient_dict(self):
         return{
+            "id":self.id,
             "first_name": self.first_name,
             "middle_name": self.middle_name,
             "last_name": self.last_name,

@@ -122,43 +122,6 @@ def add_patient_address(id):
     if form.errors:
         return{"errors":form.errors},400
 
-# Add an Address to a Single Patient
-@patient_routes.route("/<int:id>/address",methods=["POST"])
-@login_required
-def add_patient_address(id):
-    '''
-    This route will allow a provider to add an address to the patients profile
-    '''
-
-    patient = Patient.query.filter(Patient.id == id).first()
-
-    if patient is None:
-        return {"errors": "Patient Could not be found"},404
-    
-    if (current_user.id != patient.provider_id):
-        return{"Error":"Unauthorized"},401
-    
-    form = PatinentAddressForm()
-    form["csrf_token"].data = request.cookies["csrf_token"]
-    
-    if form.validate_on_submit():
-        data = form.data
-
-        new_address = Address(
-            address = data["address"],
-            city = data["city"],
-            state = data["state"],
-            isCurrent = data["isCurrent"],
-            patient_id = id
-        )
-
-        db.session.add(new_address)
-        db.session.commit()
-        return {"newNote":new_address.to_dict()}
-
-    if form.errors:
-        return{"errors":form.errors},400
-
 # Get Single Patient Info
 @patient_routes.route("/<int:id>")
 @login_required

@@ -30,6 +30,7 @@ class Address(db.Model):
 
     def to_dict(self):
         return{
+            "id":self.id,
             "address":self.address,
             "city":self.city,
             "state": self.state,
