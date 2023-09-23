@@ -41,7 +41,7 @@ def upgrade():
     sa.UniqueConstraint('username')
     )
     if environment == "production":
-        op.execute(f"ALTER TABLE statuses SET SCHEMA {SCHEMA};")
+        op.execute(f"ALTER TABLE users SET SCHEMA {SCHEMA};")
     op.create_table('patients',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('first_name', sa.String(length=55), nullable=False),
