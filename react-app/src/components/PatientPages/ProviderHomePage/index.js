@@ -1,8 +1,15 @@
+// General Imports
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+// Modals
+import OpenModalButton from "../../OpenModalButton";
+import AddPatientModal from "../AddPatientModal";
+
+// Thunks
 import { getAllPatientsThunk } from "../../../store/patient";
 
+// Helpers
 import { patientCard } from "./patientcard";
 
 function ProviderHomePage() {
@@ -18,18 +25,24 @@ function ProviderHomePage() {
     //------------------- Use Effect -------------------
     useEffect(() => {
         dispatch(getAllPatientsThunk())
-        
-        setTimeout(()=>{
+
+        setTimeout(() => {
             setLoading(false)
-        },1000)
+        }, 1000)
     }, [dispatch])
 
 
-    if(loading) return "Loading Patients..."
+    if (loading) return "Loading Patients..."
     return (
         <div>
             <ul>
-                {patientCard(Object.values(allPatients)) }
+                <li>
+                    <OpenModalButton
+                        buttonText={<span><i className="fa-sharp fa-solid fa-plus"></i> Add Member</span>}
+                        modalComponent={<AddPatientModal />}
+                    />                
+                </li>
+                {patientCard(Object.values(allPatients))}
             </ul>
         </div>
     )

@@ -12,23 +12,22 @@ export function patientCard(patients) {
 
     return priority_list.map(patient => {
         return (
-            <li>
-                <NavLink to={`/patients/${patient.id}`}>
-                    {/* left side */}
-                    <div>
-                        <p>{patient.first_name}, {patient.last_name} {patient.middle_name}</p>
-                        <p>{patient.addresses[0].city} {patient.addresses[0].state}</p>
-                    </div>
-                    {/* right side */}
-                    <div>
-                        <p>
-                            {patient.status}
-                        </p>
-                    </div>
+            <li key={`${patient.id}`}>
+                {/* left side */}
+                <div>
+                    <NavLink to={`/patients/${patient.id}`}>
+                        <p>{patient.last_name}{patient?.middle_name && ` ${patient.middle_name}`}, {patient.first_name}</p>
+                    </NavLink>
+                    <p>{patient.addresses[0].city} {patient.addresses[0].state}</p>
+                </div>
+                {/* right side */}
+                <div>
+                    <p>
+                        {patient.status}
+                    </p>
+                </div>
 
-
-                </NavLink>
-            </li>
+            </li >
         )
     })
 }

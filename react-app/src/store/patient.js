@@ -1,10 +1,9 @@
 import { normalizeObj } from './helpers';
 
-const GET_CATEGORIES = 'category/getCategories';
-
 //--------------------- Type Variables ---------------------
 const GET_ALL_PATIENTS = 'patients/getAllPatients'
 const GET_SINGLE_PATIENT = 'patients/getSinglePatient'
+const POST_NEW_PATIENT = 'patients/postNewPatient'
 
 //--------------------- Action Creators --------------------
 const getAllPatients = (patients) =>{
@@ -20,6 +19,13 @@ const getSinglePatient = (patient,addresses,notes) =>{
         patient,
         addresses,
         notes,
+    }
+}
+
+const postNewPatient = (patient) =>{
+    return{
+        type:POST_NEW_PATIENT,
+        patient
     }
 }
 
@@ -51,6 +57,27 @@ export const getSinglePatientThunk = (id) => async (dispatch) => {
     }
 }
 
+export const postNewPatientThunk = (newPatient) => async (dispatch) =>{
+    console.log("Form Data gathered from create card form:")
+    for (let key of newPatient.entries()) {
+        console.log(key[0] + ' ----> ' + key[1])
+    }
+
+    const res = await fetch(`/api/patients`,{
+        method: "POST",
+        body: newPatient
+    })
+
+    if (res.ok) {
+        const { new_patient } = await res.json()
+        dispatch(postNewPatient(new_patient))
+        return
+    } else {
+        const { errors } = await res.json()
+        return errors
+    }
+
+}
 
 
 
@@ -77,6 +104,11 @@ const patient = (state = initialState, action) => {
                     notes:{...normalizeObj(action.notes)},
                     addresses:{...normalizeObj(action.addresses)}
                 }}
+        case POST_NEW_PATIENT:
+            newState = {...state}
+            newState.allPatients[action.newPatient.id] = action.newPatient
+            return newState
+
         default:
             return state;
   }
