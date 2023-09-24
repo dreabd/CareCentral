@@ -210,17 +210,18 @@ def edit_patient_address(id,address_id):
 
     if form.validate_on_submit():
         data = form.data
+        print("🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨",data)
         if data["address"]:
             editted_address.address = data["address"]
         if data["city"]:
             editted_address.city = data["city"]
         if data["state"]:
             editted_address.state = data["state"]
-        if data["isCurrent"]:
+        if data["isCurrent"] in[True,False]:
             editted_address.isCurrent = data["isCurrent"]
 
         db.session.commit()
-        return {"address": editted_address.to_dict()}
+        return {"edittedAddress": editted_address.to_dict()}
 
     if form.errors:
         return{"errors":form.errors},400

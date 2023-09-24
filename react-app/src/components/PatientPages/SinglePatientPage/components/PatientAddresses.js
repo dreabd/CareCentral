@@ -2,14 +2,17 @@ import { useState, useEffect } from "react"
 
 import EditAddress from "./EditAddress"
 
-function PatientAddresses({ address }) {
+function PatientAddresses({ address,patientId }) {
     const [edit, setEdit] = useState(false)
 
     if (edit) return (
         <EditAddress
             edit={edit}
             setEdit={setEdit}
-            address={address} />)
+            address={address} 
+            patientId={patientId}
+
+            />)
             
     return (
         <li key={`address${address.id}`}>

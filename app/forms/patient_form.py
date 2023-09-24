@@ -14,7 +14,7 @@ class PatinentAddressForm(FlaskForm):
   address = StringField("address", validators=[DataRequired()])
   city = StringField("address", validators=[DataRequired()])
   state = StringField("address", validators=[DataRequired()])
-  isCurrent = BooleanField("isCurrent", validators=[], default=True)
+  isCurrent = BooleanField("isCurrent", default=True)
 
 class PatientNotesForm(FlaskForm):
   title = StringField('title',default="Note")

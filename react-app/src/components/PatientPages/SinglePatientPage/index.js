@@ -53,7 +53,10 @@ function SinglePatientPage() {
                     {Object.values(addresses)
                         .sort((a, b) => (a.current === b.current) ? 0 : a ? -1 : 1)
                         .map(address =>
-                            <PatientAddresses address={address} />)}
+                            <PatientAddresses
+                                address={address}
+                                patientId={singlePatient.info.id}
+                            />)}
                     {/* Add Patient Address */}
                     {!addAddress ?
                         <button onClick={() => { setAddAddress(true) }}>

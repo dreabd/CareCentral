@@ -3,9 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useModal } from "../../../context/Modal";
 
 import { StatesList } from "./StatesList"
-import { getSinglePatientThunk, postNewPatientThunk, postPatientAddressThunk } from "../../../store/patient";
-
-
+import { getSinglePatientThunk, postNewPatientThunk, putPatientAddresssThunk, postPatientAddressThunk } from "../../../store/patient";
 
 
 function AddPatientModal({
@@ -31,7 +29,7 @@ function AddPatientModal({
     const [address, setAddress] = useState(editAddresVals?.address || "")
     const [city, setCity] = useState(editAddresVals?.city || "")
     const [state, setState] = useState(editAddresVals?.state || "")
-    const [isCurrent,setIsCurrent] = useState(true)
+    const [isCurrent, setIsCurrent] = useState(editAddresVals?.current)
 
     const [errors, setErrors] = useState({})
     const [submitted, setSubmitted] = useState(false)
@@ -39,6 +37,10 @@ function AddPatientModal({
     // ------------ Slice of State Selectors -----------
     const current = useSelector(state => state.session.user)
     const allPatients = useSelector(state => state.patient.allPatients)
+    const addresses = useSelector(state => state.patient.singlePatient.addresses)
+
+
+    let addressCount = Object.values(addresses).filter(address => address.current === true).length
 
 
     //------------------- Use Effect -------------------
@@ -46,12 +48,12 @@ function AddPatientModal({
         // This useEffect is meant to help with error handling
         const errors = {};
 
-        if (!addAddressBool && !firstName.length) errors["firstName"] = "First Name is Required"
-        if (!addAddressBool && !lastName.length) errors["lastName"] = "Last Name is Required"
+        if (!addAddressBool && !editAddressBool && !firstName.length) errors["firstName"] = "First Name is Required"
+        if (!addAddressBool && !editAddressBool && !lastName.length) errors["lastName"] = "Last Name is Required"
 
         if (!address.length) errors["address"] = "Address is Requried"
 
-        if (StatesList.includes(state)) errors["state"] = "Invalid State"
+        if (!StatesList.includes(state)) errors["state"] = "Invalid State"
         if (!state.length) errors["state"] = "State is Required"
         // if (state.length !== 2) errors["state"] = "Invalid State"
 
@@ -59,11 +61,16 @@ function AddPatientModal({
         if (city.length < 3) errors["city"] = "Invalid City"
         if (city.length > 50) errors["city"] = "Invalid City"
 
-        if (!addAddressBool && !status) errors["status"] = "Invalid Status"
-        if (!addAddressBool && !birthday) errors['birthday'] = "Birthday is required."
-        if (!addAddressBool && new Date(birthday) > Date.now()) errors['birthday'] = "Invalid Birthday"
+        if (editAddressBool && !isCurrent && addressCount < 2) errors['current'] = "Must have at least one Current Address"
+
+        if (!addAddressBool && !editAddressBool && !status) errors["status"] = "Invalid Status"
+        if (!addAddressBool && !editAddressBool && !birthday) errors['birthday'] = "Birthday is required."
+        if (!addAddressBool && !editAddressBool && new Date(birthday) > Date.now()) errors['birthday'] = "Invalid Birthday"
+
         setErrors(errors)
-    }, [firstName, lastName, middleName, birthday, status, address, state, city])
+
+
+    }, [firstName, lastName, middleName, birthday, status, address, state, city, isCurrent])
 
     //  ------------- Submit Functionalities -------------
     const handleSubmit = async (e) => {
@@ -106,7 +113,6 @@ function AddPatientModal({
     const handleAddressSubmit = async (e) => {
         // Meant for adding a new address to an existing patient
         e.preventDefault()
-
         setSubmitted(true)
         if (Object.values(errors).length) return
 
@@ -114,22 +120,25 @@ function AddPatientModal({
         addressFormData.append('address', address)
         addressFormData.append('state', state)
         addressFormData.append('city', city)
-        addressFormData.append('isCurrent', true)
+        addressFormData.append('isCurrent', isCurrent)
 
-        const data = await dispatch(postPatientAddressThunk(patientId, addressFormData))
+        const data = await (
+            editAddressBool ?
+                dispatch(putPatientAddresssThunk(patientId, editAddresVals.id, addressFormData))
+                :
+                dispatch(postPatientAddressThunk(patientId, addressFormData)))
 
         if (data) {
             setErrors(data.errors)
         }
         else {
-            setAddAddress(false)
+            addAddressBool && setAddAddress(false)
+            editAddressBool && setEditAddress(false)
             dispatch(getSinglePatientThunk(patientId))
         }
     }
 
-    const handleEditAddress = async (e) => {
-
-    }
+    console.log(errors)
     //  ---------------- React Component -----------------
     return (
         <form onSubmit={handleSubmit}>
@@ -200,13 +209,13 @@ function AddPatientModal({
             {/* Logic if we are Adding an Address or a Patient */}
             {/* Logic for Editting an Address */}
             {!editAddressBool ?
-            <h3> Please Enter Your Current Address</h3> :
-            ""
+                <h3> Please Enter Your Current Address</h3> :
+                ""
             }
 
             {submitted && <span className='errors'>{errors.address}</span>}
             <label >
-                Address
+                Street
                 <input
                     type="text"
                     value={address}
@@ -230,34 +239,39 @@ function AddPatientModal({
                 <input
                     type="text"
                     value={state.toUpperCase()}
-                    onChange={e => setState(e.target.value)}
+                    onChange={e => setState(e.target.value.toUpperCase())}
                 />
             </label>
 
-           { 
-           editAddressBool &&
-           <label>
-                Current 
-                <input
-                        type="checkbox"
-                        value={isCurrent}
-                        checked={isCurrent}
-                        onChange={e => { setIsCurrent(!isCurrent) }}
-                    />
-            </label>
+            {
+                editAddressBool &&
+                <>
+                    {submitted && <span className='errors'>{errors.current}</span>}
+
+                    <label>
+                        Current
+                        <input
+                            type="checkbox"
+                            value={isCurrent}
+                            checked={isCurrent}
+                            onChange={e => { setIsCurrent(!isCurrent) }}
+                        />
+                    </label>
+                </>
             }
 
             {(addAddressBool || editAddressBool) ?
                 <>
                     <button
-                        onClick={addAddressBool ? handleAddressSubmit : handleEditAddress}>
+                        onClick={handleAddressSubmit}
+                    >
                         {addAddressBool ? "Add" : "Edit"}
                     </button>
                     <button
                         onClick={() => {
                             addAddressBool && setAddAddress(false)
                             editAddressBool && setEditAddress(false)
-                            }}>
+                        }}>
                         Cancel</button>
                 </>
                 : ""}

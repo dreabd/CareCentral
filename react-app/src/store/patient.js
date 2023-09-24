@@ -5,18 +5,19 @@ const GET_ALL_PATIENTS = 'patients/getAllPatients'
 const GET_SINGLE_PATIENT = 'patients/getSinglePatient'
 const POST_NEW_PATIENT = 'patients/postNewPatient'
 
-const POST_PATIENT_ADDRESS ='patients/postPatientAddress'
+const POST_PATIENT_ADDRESS = 'patients/postPatientAddress'
+const PUT_PATIENT_ADDRESS = "patients/putPatientAddresss"
 
 //--------------------- Action Creators --------------------
-const getAllPatients = (patients) =>{
-    return{ 
+const getAllPatients = (patients) => {
+    return {
         type: GET_ALL_PATIENTS,
         patients
     }
 }
 
-const getSinglePatient = (patient,addresses,notes) =>{
-    return{
+const getSinglePatient = (patient, addresses, notes) => {
+    return {
         type: GET_SINGLE_PATIENT,
         patient,
         addresses,
@@ -29,11 +30,11 @@ const getSinglePatient = (patient,addresses,notes) =>{
 export const getAllPatientsThunk = () => async (dispatch) => {
     const res = await fetch("/api/patients/")
 
-    if(res.ok){
+    if (res.ok) {
         const { patients } = await res.json()
         dispatch(getAllPatients(patients))
         return
-    } else{
+    } else {
         console.log("Problem loading all patients")
     }
 }
@@ -41,33 +42,33 @@ export const getAllPatientsThunk = () => async (dispatch) => {
 export const getSinglePatientThunk = (id) => async (dispatch) => {
     const res = await fetch(`/api/patients/${id}`)
 
-    if(res.ok){
+    if (res.ok) {
         const { patient } = await res.json()
-        const { addresses, notes} = patient
+        const { addresses, notes } = patient
         delete patient.addresses
-        delete patient.notes 
-        dispatch(getSinglePatient(patient,addresses,notes))
+        delete patient.notes
+        dispatch(getSinglePatient(patient, addresses, notes))
         return
-    } else{
+    } else {
         console.log("Problem loading all patients")
     }
 }
 
 
 
-export const postNewPatientThunk = (newPatient,newAddress) => async (dispatch) =>{
+export const postNewPatientThunk = (newPatient, newAddress) => async (dispatch) => {
     console.log("Form Data gathered from create card form:")
     for (let key of newPatient.entries()) {
         console.log(key[0] + ' ----> ' + key[1])
     }
-    const res = await fetch(`/api/patients/`,{
+    const res = await fetch(`/api/patients/`, {
         method: "POST",
         body: newPatient
     })
-    
+
     if (res.ok) {
         const { new_patient } = await res.json()
-        dispatch(postPatientAddressThunk(new_patient.id,newAddress))
+        dispatch(postPatientAddressThunk(new_patient.id, newAddress))
     } else {
         const { errors } = await res.json()
         return errors
@@ -75,20 +76,34 @@ export const postNewPatientThunk = (newPatient,newAddress) => async (dispatch) =
 
 }
 
-export const postPatientAddressThunk = (patientId,newAddress) => async (dispatch) =>{
-    const res = await fetch(`/api/patients/${patientId}/address`,{
+export const postPatientAddressThunk = (patientId, newAddress) => async (dispatch) => {
+    const res = await fetch(`/api/patients/${patientId}/address`, {
         method: "POST",
         body: newAddress
     })
 
-    console.log("Form Data gathered from create card form:")
-    for (let key of newAddress.entries()) {
-        console.log(key[0] + ' ----> ' + key[1])
-    }
-
     if (res.ok) {
         const { newAddress } = await res.json()
         dispatch(getAllPatientsThunk())
+        return
+    } else {
+        const { errors } = await res.json()
+        return errors
+    }
+}
+
+export const putPatientAddresssThunk = (patientId, addressId, edittedAddress) => async (dispatch) => {
+    console.log("Form Data gathered from create card form:")
+    for (let key of edittedAddress.entries()) {
+        console.log(key[0] + ' ----> ' + key[1])
+    }
+    const res = await fetch(`/api/patients/${patientId}/address/${addressId}`, {
+        method: "PUT",
+        body: edittedAddress
+    })
+
+    if (res.ok) {
+        const { edittedAddress } = await res.json()
         return
     } else {
         const { errors } = await res.json()
@@ -102,11 +117,11 @@ export const postPatientAddressThunk = (patientId,newAddress) => async (dispatch
 
 //---------------------- Initial State ---------------------
 const initialState = {
-    allPatients:{},
-    singlePatient:{
-        info:{},
-        notes:{},
-        addresses:{},
+    allPatients: {},
+    singlePatient: {
+        info: {},
+        notes: {},
+        addresses: {},
     },
 };
 
@@ -115,18 +130,20 @@ const patient = (state = initialState, action) => {
     let newState;
     switch (action.type) {
         case GET_ALL_PATIENTS:
-            return {...state, allPatients:{...normalizeObj(action.patients)}}
+            return { ...state, allPatients: { ...normalizeObj(action.patients) } }
         case GET_SINGLE_PATIENT:
-            return{...state, 
-                singlePatient:{
-                    info:{...action.patient},
-                    notes:{...normalizeObj(action.notes)},
-                    addresses:{...normalizeObj(action.addresses)}
-                }}
+            return {
+                ...state,
+                singlePatient: {
+                    info: { ...action.patient },
+                    notes: { ...normalizeObj(action.notes) },
+                    addresses: { ...normalizeObj(action.addresses) }
+                }
+            }
 
         default:
             return state;
-  }
+    }
 };
 
 export default patient;
