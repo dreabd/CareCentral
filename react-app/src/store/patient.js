@@ -5,6 +5,8 @@ const GET_ALL_PATIENTS = 'patients/getAllPatients'
 const GET_SINGLE_PATIENT = 'patients/getSinglePatient'
 const POST_NEW_PATIENT = 'patients/postNewPatient'
 
+const POST_PATIENT_ADDRESS ='patients/postPatientAddress'
+
 //--------------------- Action Creators --------------------
 const getAllPatients = (patients) =>{
     return{ 
@@ -22,12 +24,6 @@ const getSinglePatient = (patient,addresses,notes) =>{
     }
 }
 
-const postNewPatient = (patient) =>{
-    return{
-        type:POST_NEW_PATIENT,
-        patient
-    }
-}
 
 //------------------------- THUNK --------------------------
 export const getAllPatientsThunk = () => async (dispatch) => {
@@ -57,27 +53,50 @@ export const getSinglePatientThunk = (id) => async (dispatch) => {
     }
 }
 
-export const postNewPatientThunk = (newPatient) => async (dispatch) =>{
+
+
+export const postNewPatientThunk = (newPatient,newAddress) => async (dispatch) =>{
     console.log("Form Data gathered from create card form:")
     for (let key of newPatient.entries()) {
         console.log(key[0] + ' ----> ' + key[1])
     }
-
-    const res = await fetch(`/api/patients`,{
+    const res = await fetch(`/api/patients/`,{
         method: "POST",
         body: newPatient
     })
-
+    
     if (res.ok) {
         const { new_patient } = await res.json()
-        dispatch(postNewPatient(new_patient))
-        return
+        dispatch(postPatientAddressThunk(new_patient.id,newAddress))
     } else {
         const { errors } = await res.json()
         return errors
     }
 
 }
+
+export const postPatientAddressThunk = (patientId,newAddress) => async (dispatch) =>{
+    const res = await fetch(`/api/patients/${patientId}/address`,{
+        method: "POST",
+        body: newAddress
+    })
+
+    console.log("Form Data gathered from create card form:")
+    for (let key of newAddress.entries()) {
+        console.log(key[0] + ' ----> ' + key[1])
+    }
+
+    if (res.ok) {
+        const { newAddress } = await res.json()
+        dispatch(getAllPatientsThunk())
+        return
+    } else {
+        const { errors } = await res.json()
+        return errors
+    }
+}
+
+
 
 
 
@@ -104,10 +123,6 @@ const patient = (state = initialState, action) => {
                     notes:{...normalizeObj(action.notes)},
                     addresses:{...normalizeObj(action.addresses)}
                 }}
-        case POST_NEW_PATIENT:
-            newState = {...state}
-            newState.allPatients[action.newPatient.id] = action.newPatient
-            return newState
 
         default:
             return state;

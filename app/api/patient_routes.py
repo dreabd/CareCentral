@@ -28,7 +28,7 @@ def get_all_patients():
 
 # Create a new Patient
 @patient_routes.route("/", methods=["POST"])
-@login_required
+# @login_required
 def add_new_patient():
     """
     This route will add a new patient to the current provider
@@ -117,7 +117,7 @@ def add_patient_address(id):
 
         db.session.add(new_address)
         db.session.commit()
-        return {"newNote":new_address.to_dict()}
+        return {"newAddress":new_address.to_dict()}
 
     if form.errors:
         return{"errors":form.errors},400

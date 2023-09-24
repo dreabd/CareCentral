@@ -15,13 +15,13 @@ import { patientCard } from "./patientcard";
 function ProviderHomePage() {
     const dispatch = useDispatch()
 
-    // ------------ Slice of State Selectors -----------
-    const allPatients = useSelector(state => state.patient.allPatients)
-
-
     // ---------------- State Variables---------------- 
     const [loading, setLoading] = useState(true)
-
+    
+    // ------------ Slice of State Selectors -----------
+    const allPatients = useSelector(state => state.patient.allPatients)
+    const user = useSelector(state => state.session.user)
+    
     //------------------- Use Effect -------------------
     useEffect(() => {
         dispatch(getAllPatientsThunk())
@@ -35,11 +35,14 @@ function ProviderHomePage() {
     if (loading) return "Loading Patients..."
     return (
         <div>
+            <div>
+                <p>{user.username}'s Patients</p>
+            </div>
             <ul>
                 <li>
                     <OpenModalButton
-                        buttonText={<span><i className="fa-sharp fa-solid fa-plus"></i> Add Member</span>}
-                        modalComponent={<AddPatientModal />}
+                        buttonText={<span><i class="icon-plus"></i> Add Member</span>}
+                        modalComponent={<AddPatientModal/>}
                     />                
                 </li>
                 {patientCard(Object.values(allPatients))}

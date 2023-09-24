@@ -22,7 +22,7 @@ class Address(db.Model):
     state = db.Column(db.String(2),nullable=False)
 
     # Current
-    isCurrent = db.Column(db.Boolean(),nullable=False,default=True)
+    isCurrent = db.Column(db.Boolean(),nullable=False)
     # -------------------------------------------------- 
 
     # Foreign Keys 
