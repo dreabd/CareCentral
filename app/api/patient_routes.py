@@ -74,8 +74,11 @@ def add_patient_note(id):
 
     if form.validate_on_submit():
         data = form.data
-        new_note = Note(title=data["title"], text=data["text"], patient_id=id)
-        print("👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀👀", new_note)
+        new_note = Note(
+            title=data["title"],
+            text=data["text"],
+            patient_id=id
+        )
 
         db.session.add(new_note)
         db.session.commit()
@@ -97,13 +100,13 @@ def add_patient_address(id):
 
     if patient is None:
         return {"errors": "Patient Could not be found"},404
-    
+
     if (current_user.id != patient.provider_id):
         return{"Error":"Unauthorized"},401
-    
+
     form = PatinentAddressForm()
     form["csrf_token"].data = request.cookies["csrf_token"]
-    
+
     if form.validate_on_submit():
         data = form.data
 
@@ -201,7 +204,7 @@ def edit_patient_address(id,address_id):
 
     if (current_user.id != patient.provider_id):
         return{"Error":"Unauthorized"},401
-    
+
     if editted_address is None:
         return {"errors": "Address Could not be found"},404
 
@@ -259,7 +262,7 @@ def edit_patient_note(id, note_id):
             edited_note.title = data["title"]
 
         db.session.commit()
-        return {"note": edited_note.to_dict()}
+        return {"edittedNote": edited_note.to_dict()}
 
     if form.errors:
         return {"errors": form.errors}, 400

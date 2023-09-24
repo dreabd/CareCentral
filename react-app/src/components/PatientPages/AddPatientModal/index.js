@@ -36,7 +36,6 @@ function AddPatientModal({
 
     // ------------ Slice of State Selectors -----------
     const current = useSelector(state => state.session.user)
-    const allPatients = useSelector(state => state.patient.allPatients)
     const addresses = useSelector(state => state.patient.singlePatient.addresses)
 
 
@@ -77,12 +76,12 @@ function AddPatientModal({
         // Meant for adding a new patient / their address
         e.preventDefault()
 
-        // Once Submitted is true, Errors will show in their designated areas 
+        // Once Submitted is true, Errors will show in their designated areas
         // ** Will Note Proceed to Delete if there are error ***
         setSubmitted(true)
         if (Object.values(errors).length) return
 
-        // Formats data to whatever it needs to look like 
+        // Formats data to whatever it needs to look like
         const patienFormData = new FormData()
         patienFormData.append('first_name', firstName)
         patienFormData.append('last_name', lastName)

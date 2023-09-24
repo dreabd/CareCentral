@@ -21,7 +21,7 @@ function SinglePatientPage() {
     const addresses = useSelector(state => state.patient.singlePatient.addresses)
 
 
-    // ---------------- State Variables---------------- 
+    // ---------------- State Variables----------------
     const [loading, setLoading] = useState(true)
     const [addAddress, setAddAddress] = useState(false)
     const [addNote, setAddNote] = useState(false)
@@ -35,6 +35,9 @@ function SinglePatientPage() {
         }, 1000)
     }, [dispatch, id])
 
+
+    console.log(Object.values(addresses)
+        .sort((a, b) => (a.current === b.current) ? 0 : a ? 1 : -1))
     if (loading) return "Loading Patient Information..."
     if (!singlePatient.info.id) history.push("/")
     return (
@@ -51,7 +54,7 @@ function SinglePatientPage() {
                 </h3>
                 <ul>
                     {Object.values(addresses)
-                        .sort((a, b) => (a.current === b.current) ? 0 : a ? -1 : 1)
+                        .sort((a, b) => (a.current === b.current) ? 0 : a ? 1 : -1)
                         .map(address =>
                             <PatientAddresses
                                 address={address}
@@ -91,7 +94,10 @@ function SinglePatientPage() {
 
                         :
 
-                        <AddNote setAddNote={setAddNote} />
+                        <AddNote
+                            setAddNote={setAddNote}
+                            patientId={singlePatient.info.id}
+                        />
                     }
                 </ul>
 

@@ -92,6 +92,22 @@ export const postPatientAddressThunk = (patientId, newAddress) => async (dispatc
     }
 }
 
+export const postPatientNoteThunk = (patientId,newNote) => async(dispatch) =>{
+    const res = await fetch(`/api/patients/${patientId}/note`, {
+        method: "POST",
+        body: newNote
+    })
+
+    if (res.ok) {
+        const { newNote } = await res.json()
+        dispatch(getAllPatientsThunk())
+        return
+    } else {
+        const { errors } = await res.json()
+        return errors
+    }
+}
+
 export const putPatientAddresssThunk = (patientId, addressId, edittedAddress) => async (dispatch) => {
     console.log("Form Data gathered from create card form:")
     for (let key of edittedAddress.entries()) {
@@ -111,6 +127,20 @@ export const putPatientAddresssThunk = (patientId, addressId, edittedAddress) =>
     }
 }
 
+export const putPatientNoteThunk = (patientId,noteId,eddittedNote) => async (dispatch) =>{
+    const res = await fetch(`/api/patients/${patientId}/notes/${noteId}`,{
+        method: "PUT",
+        body: eddittedNote
+    })
+
+
+    if (res.ok) {
+        const { edittedNote } = await res.json()
+        return 
+    } else {
+        const { errors } = await res.json()
+        return errors
+    }}
 
 
 
