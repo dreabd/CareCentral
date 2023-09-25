@@ -34,7 +34,7 @@ function AddNote({
 
         setErrors(errors)
 
-    }, [text, title,])
+    }, [text, title])
 
     //  ------------- Submit Functionalities -------------
     const handleSubmit = async (e) => {

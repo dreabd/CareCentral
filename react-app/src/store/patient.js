@@ -88,7 +88,7 @@ export const getSinglePatientThunk = (id) => async (dispatch) => {
 
 
 
-export const postNewPatientThunk = (newPatient, newAddress) => async (dispatch) => {
+export const postNewPatientThunk = (newPatient, newAddress, noteListFormData) => async (dispatch) => {
     console.log("Form Data gathered from create card form:")
     for (let key of newPatient.entries()) {
         console.log(key[0] + ' ----> ' + key[1])
@@ -101,6 +101,10 @@ export const postNewPatientThunk = (newPatient, newAddress) => async (dispatch) 
     if (res.ok) {
         const { new_patient } = await res.json()
         dispatch(postPatientAddressThunk(new_patient.id, newAddress))
+
+        noteListFormData.forEach( newNote =>{
+            dispatch(postPatientNoteThunk(new_patient.id,newNote))
+        })
     } else {
         const { errors } = await res.json()
         return errors

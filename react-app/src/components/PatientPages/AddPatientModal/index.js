@@ -33,7 +33,7 @@ function AddPatientModal({
     const [state, setState] = useState(editAddresVals?.state || "")
     const [isCurrent, setIsCurrent] = useState(editAddresVals?.current)
 
-    const [noteList,setNoteList] = useState([])
+    const [noteList, setNoteList] = useState([])
 
     const [errors, setErrors] = useState({})
     const [submitted, setSubmitted] = useState(false)
@@ -73,7 +73,7 @@ function AddPatientModal({
         setErrors(errors)
 
 
-    }, [firstName, lastName, middleName, birthday, status, address, state, city, isCurrent,noteList])
+    }, [firstName, lastName, middleName, birthday, status, address, state, city, isCurrent, noteList])
 
     //  ------------- Submit Functionalities -------------
     // Function to Submit a New Patient
@@ -100,8 +100,19 @@ function AddPatientModal({
         addressFormData.append('state', state)
         addressFormData.append('city', city)
         addressFormData.append('isCurrent', true)
+        
+        let noteListFormData = []
+        noteList.forEach(note => {
+            const noteFormData = new FormData
+            noteFormData.append("title",note.title)
+            noteFormData.append("text",note.text)
+            
+            noteListFormData.push(noteFormData)
+        })
+        
+        console.log(noteListFormData)
 
-        const data = await dispatch(postNewPatientThunk(patienFormData, addressFormData))
+        const data = await dispatch(postNewPatientThunk(patienFormData, addressFormData,noteListFormData))
 
         // console.log(data)
         if (data) {
@@ -144,7 +155,6 @@ function AddPatientModal({
 
 
 
-    console.log(noteList)
     //  ---------------- React Component -----------------
     return (
         <form onSubmit={handleSubmit}>
