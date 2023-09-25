@@ -5,7 +5,6 @@ import AddNote from "../SinglePatientPage/components/AddNote"
 function AddInitialPatientNote({ noteList, setNoteList, patientId }) {
     //  --------------- State Variables ---------------
     // Note List Should be Threaded from index
-    const [addNote, setAddNote] = useState(false)
 
     const handleNoteListAdd = (e) => {
         e.preventDefault()
@@ -36,7 +35,6 @@ function AddInitialPatientNote({ noteList, setNoteList, patientId }) {
             }
             {noteList.map((note, index) =>
                 <AddNote
-                    setAddNote={setAddNote}
                     patientId={patientId}
                     noteList={true}
                     handleNoteListRemove={handleNoteListRemove}

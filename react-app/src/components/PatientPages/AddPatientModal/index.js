@@ -5,8 +5,18 @@ import { useModal } from "../../../context/Modal";
 import { StatesList } from "./StatesList"
 import AddInitialPatientNote from "./AddInitialPatientNote";
 
-import { getSinglePatientThunk, postNewPatientThunk, putPatientAddresssThunk, postPatientAddressThunk } from "../../../store/patient";
+import {
+    getSinglePatientThunk,
+    postNewPatientThunk,
+    putSinglePatientThunk,
+    putPatientAddresssThunk,
+    postPatientAddressThunk } from "../../../store/patient";
 
+const formatDate = (dateString) => {
+    if (!dateString) return;
+    const date = new Date(dateString)
+    return date.toISOString().split('T')[0];
+}
 
 function AddPatientModal({
     // Patient ID: Edditing Routes Mainly Use This
@@ -31,9 +41,10 @@ function AddPatientModal({
     const [lastName, setLastName] = useState(editPatientVals?.last_name || "")
     const [middleName, setMiddleName] = useState(editPatientVals?.middle_name || "")
 
-    const [birthday, setBirthday] = useState(editPatientVals?.date_of_birth || "")
+    const [birthday, setBirthday] = useState(formatDate(editPatientVals?.date_of_birth) || "")
 
-    const [status, setStatus] = useState(editPatientVals?.status || "")
+    let validStatuses = ["Inquiry", "Onboarding", "Active", "Churned"]
+    const [status, setStatus] = useState(validStatuses.indexOf(editPatientVals?.status) + 1 || "")
 
     const [address, setAddress] = useState(editAddresVals?.address || "")
     const [city, setCity] = useState(editAddresVals?.city || "")
@@ -49,7 +60,7 @@ function AddPatientModal({
     const current = useSelector(state => state.session.user)
     const addresses = useSelector(state => state.patient.singlePatient.addresses)
 
-
+    // To make sure that there is at least one currnet addres in patients file
     let addressCount = Object.values(addresses).filter(address => address.current === true).length
 
 
@@ -61,19 +72,19 @@ function AddPatientModal({
         if (!addAddressBool && !editAddressBool && !firstName.length) errors["firstName"] = "First Name is Required"
         if (!addAddressBool && !editAddressBool && !lastName.length) errors["lastName"] = "Last Name is Required"
 
-        if (!address.length) errors["address"] = "Address is Requried"
+        if (!editPatientBool && !address.length) errors["address"] = "Address is Requried"
 
-        if (!StatesList.includes(state)) errors["state"] = "Invalid State"
-        if (!state.length) errors["state"] = "State is Required"
+        if (!editPatientBool && !StatesList.includes(state)) errors["state"] = "Invalid State"
+        if (!editPatientBool && !state.length) errors["state"] = "State is Required"
         // if (state.length !== 2) errors["state"] = "Invalid State"
 
-        if (!city.length) errors["city"] = "City is Required"
-        if (city.length < 3) errors["city"] = "Invalid City"
-        if (city.length > 50) errors["city"] = "Invalid City"
+        if (!editPatientBool && !city.length) errors["city"] = "City is Required"
+        if (!editPatientBool && city.length < 3) errors["city"] = "Invalid City"
+        if (!editPatientBool && city.length > 50) errors["city"] = "Invalid City"
 
         if (editAddressBool && !isCurrent && addressCount < 2) errors['current'] = "Must have at least one Current Address"
 
-        if (!addAddressBool && !editAddressBool && !status) errors["status"] = "Invalid Status"
+        if (!addAddressBool && !editAddressBool && (!status || status ==="Select a Status")) errors["status"] = "Invalid Status"
         if (!addAddressBool && !editAddressBool && !birthday) errors['birthday'] = "Birthday is required."
         if (!addAddressBool && !editAddressBool && new Date(birthday) > Date.now()) errors['birthday'] = "Invalid Birthday"
 
@@ -81,7 +92,7 @@ function AddPatientModal({
 
 
     }, [firstName, lastName, middleName, birthday, status, address, state, city, isCurrent, noteList])
-
+    console.log(status)
     //  ------------- Submit Functionalities -------------
     // Function to Submit a New Patient
     const handleSubmit = async (e) => {
@@ -94,13 +105,13 @@ function AddPatientModal({
         if (Object.values(errors).length) return
 
         // Formats data to whatever it needs to look like
-        const patienFormData = new FormData()
-        patienFormData.append('first_name', firstName)
-        patienFormData.append('last_name', lastName)
-        middleName && patienFormData.append('middle_name', middleName)
-        patienFormData.append('date_of_birth', birthday)
-        patienFormData.append('status_id', status)
-        patienFormData.append("provider_id", current.id)
+        const patientFormData = new FormData()
+        patientFormData.append('first_name', firstName)
+        patientFormData.append('last_name', lastName)
+        middleName && patientFormData.append('middle_name', middleName)
+        patientFormData.append('date_of_birth', birthday)
+        patientFormData.append('status_id', status)
+        patientFormData.append("provider_id", current.id)
 
         const addressFormData = new FormData()
         addressFormData.append('address', address)
@@ -117,9 +128,7 @@ function AddPatientModal({
             noteListFormData.push(noteFormData)
         })
 
-        console.log(noteListFormData)
-
-        const data = await dispatch(postNewPatientThunk(patienFormData, addressFormData, noteListFormData))
+        const data = await dispatch(postNewPatientThunk(patientFormData, addressFormData, noteListFormData))
 
         // console.log(data)
         if (data) {
@@ -156,10 +165,35 @@ function AddPatientModal({
         else {
             addAddressBool && setAddAddress(false)
             editAddressBool && setEditAddress(false)
-            // dispatch(getSinglePatientThunk(patientId))
         }
     }
+    // Recycling this Componet for editting a patient
+    const handlePatientEdit = async (e) => {
+        e.preventDefault()
+        setSubmitted(true)
+        if (Object.values(errors).length) return
 
+        const patientFormData = new FormData()
+        patientFormData.append('first_name', firstName)
+        patientFormData.append('last_name', lastName)
+        middleName && patientFormData.append('middle_name', middleName)
+        patientFormData.append('date_of_birth', birthday)
+        patientFormData.append('status_id', status)
+        patientFormData.append("patient_id", patientId)
+        patientFormData.append("provider_id", current.id)
+
+        const data = await dispatch(putSinglePatientThunk(patientId,patientFormData))
+
+        // debugger
+        if(data){
+            setErrors(data)
+        }
+        else{
+        // debugger
+            setEditPatient(false)
+        }
+
+    }
 
 
     //  ---------------- React Component -----------------
@@ -219,7 +253,7 @@ function AddPatientModal({
                                 value={status}
                                 onChange={(e) => setStatus(e.target.value)}
                             >
-                                <option default>Select a Staus</option>
+                                <option default>Select a Status</option>
                                 <option value="1">Inquiry</option>
                                 <option value="2">Onboarding</option>
                                 <option value="3">Active</option>
@@ -236,7 +270,7 @@ function AddPatientModal({
                 ""
             }
             {
-                !editPatientBool && 
+                !editPatientBool &&
                 <>
                     {submitted && <span className='errors'>{errors.address}</span>}
                     <label >
@@ -288,32 +322,38 @@ function AddPatientModal({
                 </>
             }
 
-            {(addAddressBool || editAddressBool) ?
+            {(addAddressBool || editAddressBool || editPatientBool) ?
                 <>
-                    <button
-                        onClick={handleAddressSubmit}
-                    >
-                        {addAddressBool ? "Add" : "Edit"}
-                    </button>
+                    {
+                            <button
+                                onClick={
+                                    editPatientBool ?
+                                        handlePatientEdit
+                                        :
+                                        handleAddressSubmit
+                                }
+                            >
+                                {addAddressBool ? "Add" : "Edit"}
+                            </button>
+
+                    }
                     <button
                         onClick={() => {
                             addAddressBool && setAddAddress(false)
                             editAddressBool && setEditAddress(false)
+                            editPatientBool && setEditPatient(false)
                         }}>
                         Cancel</button>
                 </>
                 : ""}
 
-            {(!addAddressBool && !editAddressBool) &&
+            {(!addAddressBool && !editAddressBool && !editPatientBool) &&
                 <>
-                    {
-                        !editPatientBool &&
-                        <AddInitialPatientNote
-                            noteList={noteList}
-                            setNoteList={setNoteList}
-                            patientId={patientId}
-                        />
-                    }
+                    <AddInitialPatientNote
+                        noteList={noteList}
+                        setNoteList={setNoteList}
+                        patientId={patientId}
+                    />
 
                     <button type="submit">
                         Submit

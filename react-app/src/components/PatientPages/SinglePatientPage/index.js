@@ -8,7 +8,6 @@ import PatientAddresses from "./components/PatientAddresses";
 import PatientNotes from "./components/PatientNotes";
 import AddNote from "./components/AddNote";
 import AddAddress from "./components/AddAddress";
-import { Redirect } from "react-router-dom/cjs/react-router-dom.min";
 import PatientInfo from "./components/PatientInfo";
 
 function SinglePatientPage() {
@@ -30,7 +29,7 @@ function SinglePatientPage() {
 
         setTimeout(() => {
             setLoading(false)
-        }, 2000)
+        }, 4000)
     }, [dispatch, id])
 
     if (loading) return "Loading Patient Information..."

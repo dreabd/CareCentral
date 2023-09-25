@@ -182,8 +182,9 @@ def put_single_patient(id):
         if data["date_of_birth"]:
             patient.date_of_birth = data["date_of_birth"]
 
+
         db.session.commit()
-        return {"patient": patient.to_dict()}
+        return {"edittedPatient": patient.to_dict()}
 
     if form.errors:
         return {"errors": form.errors}, 400

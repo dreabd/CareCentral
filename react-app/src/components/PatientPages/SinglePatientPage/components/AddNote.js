@@ -4,15 +4,18 @@ import { useDispatch } from "react-redux"
 import { postPatientNoteThunk, putPatientNoteThunk } from "../../../../store/patient"
 
 function AddNote({
+    patientId,
+    // Props for Adding Note
     setAddNote,
+    // Props for Editting Note
     setEditNote,
     edittedNote,
-    patientId,
+    intialNote,
+    // Props for Adding an Intial Note
     noteList,
-    handleNoteListRemove,
     index,
+    handleNoteListRemove,
     handleNoteListChange,
-    intialNote
 }) {
     // Need prop thread patient ID
     const dispatch = useDispatch()

@@ -3,7 +3,8 @@ import { normalizeObj } from './helpers';
 //--------------------- Type Variables ---------------------
 const GET_ALL_PATIENTS = 'patients/getAllPatients'
 const GET_SINGLE_PATIENT = 'patients/getSinglePatient'
-const POST_NEW_PATIENT = 'patients/postNewPatient'
+const POST_SINGLE_PATIENT = 'patients/postSinglePatient'
+const PUT_SINGLE_PATIENT = 'patients/putSinglePatient'
 
 const POST_PATIENT_ADDRESS = 'patients/postPatientAddress'
 const PUT_PATIENT_ADDRESS = "patients/putPatientAddresss"
@@ -25,6 +26,13 @@ const getSinglePatient = (patient, addresses, notes) => {
         patient,
         addresses,
         notes,
+    }
+}
+
+const putSinglePatient = (patient) => {
+    return {
+        type: PUT_SINGLE_PATIENT,
+        patient
     }
 }
 
@@ -86,13 +94,7 @@ export const getSinglePatientThunk = (id) => async (dispatch) => {
     }
 }
 
-
-
 export const postNewPatientThunk = (newPatient, newAddress, noteListFormData) => async (dispatch) => {
-    console.log("Form Data gathered from create card form:")
-    for (let key of newPatient.entries()) {
-        console.log(key[0] + ' ----> ' + key[1])
-    }
     const res = await fetch(`/api/patients/`, {
         method: "POST",
         body: newPatient
@@ -102,16 +104,32 @@ export const postNewPatientThunk = (newPatient, newAddress, noteListFormData) =>
         const { new_patient } = await res.json()
         dispatch(postPatientAddressThunk(new_patient.id, newAddress))
 
-        noteListFormData.forEach( newNote =>{
-            dispatch(postPatientNoteThunk(new_patient.id,newNote))
+        noteListFormData.forEach(newNote => {
+            dispatch(postPatientNoteThunk(new_patient.id, newNote))
         })
+    } else {
+        const { errors } = await res.json()
+        return errors
+    }
+}
+
+export const putSinglePatientThunk = (patientId, edittedPatient) => async (dispatch) => {
+    const res = await fetch(`/api/patients/${patientId}`, {
+        method: "PUT",
+        body: edittedPatient
+    })
+
+    if (res.ok) {
+        const { edittedPatient } = await res.json()
+        dispatch(putSinglePatient(edittedPatient))
+        delete patient.addresses
+
     } else {
         const { errors } = await res.json()
         return errors
     }
 
 }
-
 
 // -------------- Address Related --------------
 export const postPatientAddressThunk = (patientId, newAddress) => async (dispatch) => {
@@ -183,9 +201,6 @@ export const putPatientNoteThunk = (patientId, noteId, edittedNote) => async (di
     }
 }
 
-
-
-
 //---------------------- Initial State ---------------------
 const initialState = {
     allPatients: {},
@@ -212,6 +227,16 @@ const patient = (state = initialState, action) => {
                     addresses: { ...normalizeObj(action.addresses) }
                 }
             }
+        case PUT_SINGLE_PATIENT:
+            let information = { ...state.singlePatient.info }
+            information = action.patient
+            return {
+                ...state,
+                singlePatient: {
+                    ...state.singlePatient,
+                    info: {...information }
+                }
+            };
 
 
         // -------------- Address Related --------------

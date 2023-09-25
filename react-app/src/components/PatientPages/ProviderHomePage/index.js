@@ -15,9 +15,9 @@ import { patientCard } from "./patientcard";
 function ProviderHomePage() {
     const dispatch = useDispatch()
 
-    // ---------------- State Variables---------------- 
+    // ---------------- State Variables----------------
     const [loading, setLoading] = useState(true)
-    
+
     // ------------ Slice of State Selectors -----------
     const allPatients = useSelector(state => state.patient.allPatients)
     const user = useSelector(state => state.session.user)
@@ -43,7 +43,7 @@ function ProviderHomePage() {
                     <OpenModalButton
                         buttonText={<span><i class="icon-plus"></i> Add Member</span>}
                         modalComponent={<AddPatientModal/>}
-                    />                
+                    />
                 </li>
                 {patientCard(Object.values(allPatients))}
             </ul>
