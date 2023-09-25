@@ -18,8 +18,6 @@ function SinglePatientPage() {
 
     // ------------ Slice of State Selectors -----------
     const singlePatient = useSelector(state => state.patient.singlePatient)
-    const addresses = useSelector(state => state.patient.singlePatient.addresses)
-
 
     // ---------------- State Variables----------------
     const [loading, setLoading] = useState(true)
@@ -32,12 +30,9 @@ function SinglePatientPage() {
 
         setTimeout(() => {
             setLoading(false)
-        }, 1000)
+        }, 2000)
     }, [dispatch, id])
 
-
-    console.log(Object.values(addresses)
-        .sort((a, b) => (a.current === b.current) ? 0 : a ? 1 : -1))
     if (loading) return "Loading Patient Information..."
     if (!singlePatient.info.id) history.push("/")
     return (
@@ -53,7 +48,7 @@ function SinglePatientPage() {
                     Addresss
                 </h3>
                 <ul>
-                    {Object.values(addresses)
+                    {Object.values(singlePatient.addresses)
                         .sort((a, b) => (a.current === b.current) ? 0 : a ? 1 : -1)
                         .map(address =>
                             <PatientAddresses
@@ -85,7 +80,14 @@ function SinglePatientPage() {
                     Notes
                 </h3>
                 <ul>
-                    <PatientNotes notes={Object.values(singlePatient.notes)} />
+                    {
+                        Object.values(singlePatient.notes).map(note =>
+                            <PatientNotes
+                                note={note}
+                                patientId={singlePatient.info.id}
+                            />
+                        )
+                    }
                     {/* Add Patient Note */}
                     {!addNote ?
                         <button onClick={() => { setAddNote(true) }} >

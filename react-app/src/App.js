@@ -12,6 +12,7 @@ import ProtectedRoute from "./components/auth/ProtectedRoute";
 
 import ProviderHomePage from "./components/PatientPages/ProviderHomePage";
 import SinglePatientPage from "./components/PatientPages/SinglePatientPage";
+import AddInitialPatientNote from "./components/PatientPages/AddPatientModal/AddInitialPatientNote";
 
 function App() {
   const dispatch = useDispatch();
@@ -41,6 +42,11 @@ function App() {
           <ProtectedRoute exact path='/patients/:id'>
             <SinglePatientPage/>
           </ProtectedRoute>
+
+          <ProtectedRoute exact path='/test'>
+            <AddInitialPatientNote/>
+          </ProtectedRoute>
+
 
         </Switch>
       )}

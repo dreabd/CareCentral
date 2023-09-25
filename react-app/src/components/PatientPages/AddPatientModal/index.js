@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useModal } from "../../../context/Modal";
 
 import { StatesList } from "./StatesList"
+import AddInitialPatientNote from "./AddInitialPatientNote";
+
 import { getSinglePatientThunk, postNewPatientThunk, putPatientAddresssThunk, postPatientAddressThunk } from "../../../store/patient";
 
 
@@ -30,6 +32,8 @@ function AddPatientModal({
     const [city, setCity] = useState(editAddresVals?.city || "")
     const [state, setState] = useState(editAddresVals?.state || "")
     const [isCurrent, setIsCurrent] = useState(editAddresVals?.current)
+
+    const [noteList,setNoteList] = useState([])
 
     const [errors, setErrors] = useState({})
     const [submitted, setSubmitted] = useState(false)
@@ -69,9 +73,10 @@ function AddPatientModal({
         setErrors(errors)
 
 
-    }, [firstName, lastName, middleName, birthday, status, address, state, city, isCurrent])
+    }, [firstName, lastName, middleName, birthday, status, address, state, city, isCurrent,noteList])
 
     //  ------------- Submit Functionalities -------------
+    // Function to Submit a New Patient
     const handleSubmit = async (e) => {
         // Meant for adding a new patient / their address
         e.preventDefault()
@@ -108,7 +113,7 @@ function AddPatientModal({
 
         }
     }
-
+    // Recycling this Componet for adding / editting addresses
     const handleAddressSubmit = async (e) => {
         // Meant for adding a new address to an existing patient
         e.preventDefault()
@@ -133,11 +138,13 @@ function AddPatientModal({
         else {
             addAddressBool && setAddAddress(false)
             editAddressBool && setEditAddress(false)
-            dispatch(getSinglePatientThunk(patientId))
+            // dispatch(getSinglePatientThunk(patientId))
         }
     }
 
-    console.log(errors)
+
+
+    console.log(noteList)
     //  ---------------- React Component -----------------
     return (
         <form onSubmit={handleSubmit}>
@@ -276,9 +283,18 @@ function AddPatientModal({
                 : ""}
 
             {(!addAddressBool && !editAddressBool) &&
-                <button type="submit">
-                    Submit
-                </button>
+                <>
+                    <AddInitialPatientNote
+                        noteList={noteList}
+                        setNoteList={setNoteList}
+                        patientId={patientId}
+                    />
+
+                    <button type="submit">
+                        Submit
+                    </button>
+
+                </>
             }
 
 

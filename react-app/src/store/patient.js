@@ -8,6 +8,9 @@ const POST_NEW_PATIENT = 'patients/postNewPatient'
 const POST_PATIENT_ADDRESS = 'patients/postPatientAddress'
 const PUT_PATIENT_ADDRESS = "patients/putPatientAddresss"
 
+const POST_PATIENT_NOTE = "patients/postPatientNote"
+const PUT_PATIENT_NOTE = "patients/putPatientNote"
+
 //--------------------- Action Creators --------------------
 const getAllPatients = (patients) => {
     return {
@@ -25,8 +28,37 @@ const getSinglePatient = (patient, addresses, notes) => {
     }
 }
 
+const postPatientAddress = (address) => {
+    return {
+        type: POST_PATIENT_ADDRESS,
+        address
+    }
+}
+
+const putPatientAddresss = (address) => {
+    return {
+        type: PUT_PATIENT_ADDRESS,
+        address
+    }
+}
+
+const postPatientNote = (note) => {
+    return {
+        type: POST_PATIENT_NOTE,
+        note
+    }
+}
+
+const putPatientNote = (note) => {
+    return {
+        type: PUT_PATIENT_NOTE,
+        note
+    }
+}
 
 //------------------------- THUNK --------------------------
+
+// -------------- Patient Related --------------
 export const getAllPatientsThunk = () => async (dispatch) => {
     const res = await fetch("/api/patients/")
 
@@ -76,6 +108,8 @@ export const postNewPatientThunk = (newPatient, newAddress) => async (dispatch) 
 
 }
 
+
+// -------------- Address Related --------------
 export const postPatientAddressThunk = (patientId, newAddress) => async (dispatch) => {
     const res = await fetch(`/api/patients/${patientId}/address`, {
         method: "POST",
@@ -84,22 +118,7 @@ export const postPatientAddressThunk = (patientId, newAddress) => async (dispatc
 
     if (res.ok) {
         const { newAddress } = await res.json()
-        dispatch(getAllPatientsThunk())
-        return
-    } else {
-        const { errors } = await res.json()
-        return errors
-    }
-}
-
-export const postPatientNoteThunk = (patientId,newNote) => async(dispatch) =>{
-    const res = await fetch(`/api/patients/${patientId}/note`, {
-        method: "POST",
-        body: newNote
-    })
-
-    if (res.ok) {
-        const { newNote } = await res.json()
+        dispatch(postPatientAddress(newAddress))
         dispatch(getAllPatientsThunk())
         return
     } else {
@@ -109,10 +128,7 @@ export const postPatientNoteThunk = (patientId,newNote) => async(dispatch) =>{
 }
 
 export const putPatientAddresssThunk = (patientId, addressId, edittedAddress) => async (dispatch) => {
-    console.log("Form Data gathered from create card form:")
-    for (let key of edittedAddress.entries()) {
-        console.log(key[0] + ' ----> ' + key[1])
-    }
+
     const res = await fetch(`/api/patients/${patientId}/address/${addressId}`, {
         method: "PUT",
         body: edittedAddress
@@ -120,6 +136,8 @@ export const putPatientAddresssThunk = (patientId, addressId, edittedAddress) =>
 
     if (res.ok) {
         const { edittedAddress } = await res.json()
+        dispatch(putPatientAddresss(edittedAddress))
+        // dispatch(getSinglePatientThunk(patientId))
         return
     } else {
         const { errors } = await res.json()
@@ -127,20 +145,39 @@ export const putPatientAddresssThunk = (patientId, addressId, edittedAddress) =>
     }
 }
 
-export const putPatientNoteThunk = (patientId,noteId,eddittedNote) => async (dispatch) =>{
-    const res = await fetch(`/api/patients/${patientId}/notes/${noteId}`,{
-        method: "PUT",
-        body: eddittedNote
+// -------------- Note Related --------------
+export const postPatientNoteThunk = (patientId, newNote) => async (dispatch) => {
+    const res = await fetch(`/api/patients/${patientId}/note`, {
+        method: "POST",
+        body: newNote
     })
 
-
     if (res.ok) {
-        const { edittedNote } = await res.json()
-        return 
+        const { newNote } = await res.json()
+
+        dispatch(postPatientNote(newNote))
+        return
     } else {
         const { errors } = await res.json()
         return errors
-    }}
+    }
+}
+
+export const putPatientNoteThunk = (patientId, noteId, edittedNote) => async (dispatch) => {
+    const res = await fetch(`/api/patients/${patientId}/note/${noteId}`, {
+        method: "PUT",
+        body: edittedNote
+    })
+
+    if (res.ok) {
+        const { edittedNote } = await res.json()
+        dispatch(putPatientNote(edittedNote))
+        return
+    } else {
+        const { errors } = await res.json()
+        return errors
+    }
+}
 
 
 
@@ -159,6 +196,7 @@ const initialState = {
 const patient = (state = initialState, action) => {
     let newState;
     switch (action.type) {
+        // -------------- Patient Related --------------
         case GET_ALL_PATIENTS:
             return { ...state, allPatients: { ...normalizeObj(action.patients) } }
         case GET_SINGLE_PATIENT:
@@ -170,6 +208,45 @@ const patient = (state = initialState, action) => {
                     addresses: { ...normalizeObj(action.addresses) }
                 }
             }
+
+
+        // -------------- Address Related --------------
+        case POST_PATIENT_ADDRESS:
+            newState = { ...state }
+            console.log(newState)
+            newState.singlePatient.addresses[action.address.id] = action.address
+            console.log(newState)
+            return newState
+
+        case PUT_PATIENT_ADDRESS:
+            let addresses = { ...state.singlePatient.addresses }
+            addresses[action.address.id] = action.address
+            return {
+                ...state,
+                singlePatient: {
+                    ...state.singlePatient,
+                    addresses: { ...addresses }
+                }
+            };
+
+        // -------------- Notes Related --------------
+
+        case POST_PATIENT_NOTE:
+            newState = { ...state }
+            newState.singlePatient.notes[action.note.id] = action.note
+            return newState
+
+        case PUT_PATIENT_NOTE:
+            let notes = { ...state.singlePatient.notes }
+            notes[action.note.id] = action.note
+            return {
+                ...state,
+                singlePatient: {
+                    ...state.singlePatient,
+                    notes: { ...notes }
+                }
+            };
+
 
         default:
             return state;
