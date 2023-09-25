@@ -4,12 +4,12 @@ import { useParams, useHistory } from "react-router-dom";
 
 import { getSinglePatientThunk } from "../../../store/patient"
 
-import patientInfo from "./components/PatientInfo";
 import PatientAddresses from "./components/PatientAddresses";
 import PatientNotes from "./components/PatientNotes";
 import AddNote from "./components/AddNote";
 import AddAddress from "./components/AddAddress";
 import { Redirect } from "react-router-dom/cjs/react-router-dom.min";
+import PatientInfo from "./components/PatientInfo";
 
 function SinglePatientPage() {
     const dispatch = useDispatch()
@@ -39,7 +39,9 @@ function SinglePatientPage() {
         <div>
             {/* General Information */}
             <div>
-                {patientInfo(singlePatient.info)}
+                <PatientInfo
+                    patient={singlePatient.info}
+                />
             </div>
 
             {/* Address */}

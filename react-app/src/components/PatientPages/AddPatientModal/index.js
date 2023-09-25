@@ -9,24 +9,31 @@ import { getSinglePatientThunk, postNewPatientThunk, putPatientAddresssThunk, po
 
 
 function AddPatientModal({
+    // Patient ID: Edditing Routes Mainly Use This
+    patientId,
+    // Props for Adding an Address
     addAddressBool,
-    editAddressBool,
     setAddAddress,
+    // Props for Editting an Address
+    editAddressBool,
     setEditAddress,
     editAddresVals,
-    patientId,
+    // Props for Editting a Patient
+    editPatientBool,
+    setEditPatient,
+    editPatientVals,
 }) {
     const dispatch = useDispatch()
     const { closeModal } = useModal();
 
     //  --------------- State Variables ---------------
-    const [firstName, setFirstName] = useState("")
-    const [lastName, setLastName] = useState("")
-    const [middleName, setMiddleName] = useState("")
+    const [firstName, setFirstName] = useState(editPatientVals?.first_name || "")
+    const [lastName, setLastName] = useState(editPatientVals?.last_name || "")
+    const [middleName, setMiddleName] = useState(editPatientVals?.middle_name || "")
 
-    const [birthday, setBirthday] = useState()
+    const [birthday, setBirthday] = useState(editPatientVals?.date_of_birth || "")
 
-    const [status, setStatus] = useState("")
+    const [status, setStatus] = useState(editPatientVals?.status || "")
 
     const [address, setAddress] = useState(editAddresVals?.address || "")
     const [city, setCity] = useState(editAddresVals?.city || "")
@@ -100,19 +107,19 @@ function AddPatientModal({
         addressFormData.append('state', state)
         addressFormData.append('city', city)
         addressFormData.append('isCurrent', true)
-        
+
         let noteListFormData = []
         noteList.forEach(note => {
             const noteFormData = new FormData
-            noteFormData.append("title",note.title)
-            noteFormData.append("text",note.text)
-            
+            noteFormData.append("title", note.title)
+            noteFormData.append("text", note.text)
+
             noteListFormData.push(noteFormData)
         })
-        
+
         console.log(noteListFormData)
 
-        const data = await dispatch(postNewPatientThunk(patienFormData, addressFormData,noteListFormData))
+        const data = await dispatch(postNewPatientThunk(patienFormData, addressFormData, noteListFormData))
 
         // console.log(data)
         if (data) {
@@ -224,40 +231,45 @@ function AddPatientModal({
 
             {/* Logic if we are Adding an Address or a Patient */}
             {/* Logic for Editting an Address */}
-            {!editAddressBool ?
+            {(!editAddressBool && !editPatientBool) ?
                 <h3> Please Enter Your Current Address</h3> :
                 ""
             }
+            {
+                !editPatientBool && 
+                <>
+                    {submitted && <span className='errors'>{errors.address}</span>}
+                    <label >
+                        Street
+                        <input
+                            type="text"
+                            value={address}
+                            onChange={e => setAddress(e.target.value)}
+                        />
+                    </label>
 
-            {submitted && <span className='errors'>{errors.address}</span>}
-            <label >
-                Street
-                <input
-                    type="text"
-                    value={address}
-                    onChange={e => setAddress(e.target.value)}
-                />
-            </label>
+                    {submitted && <span className='errors'>{errors.city}</span>}
+                    <label >
+                        City
+                        <input
+                            type="text"
+                            value={city}
+                            onChange={e => setCity(e.target.value)}
+                        />
+                    </label>
 
-            {submitted && <span className='errors'>{errors.city}</span>}
-            <label >
-                City
-                <input
-                    type="text"
-                    value={city}
-                    onChange={e => setCity(e.target.value)}
-                />
-            </label>
+                    {submitted && <span className='errors'>{errors.state}</span>}
+                    <label>
+                        State
+                        <input
+                            type="text"
+                            value={state.toUpperCase()}
+                            onChange={e => setState(e.target.value.toUpperCase())}
+                        />
+                    </label>
+                </>
 
-            {submitted && <span className='errors'>{errors.state}</span>}
-            <label>
-                State
-                <input
-                    type="text"
-                    value={state.toUpperCase()}
-                    onChange={e => setState(e.target.value.toUpperCase())}
-                />
-            </label>
+            }
 
             {
                 editAddressBool &&
@@ -294,11 +306,14 @@ function AddPatientModal({
 
             {(!addAddressBool && !editAddressBool) &&
                 <>
-                    <AddInitialPatientNote
-                        noteList={noteList}
-                        setNoteList={setNoteList}
-                        patientId={patientId}
-                    />
+                    {
+                        !editPatientBool &&
+                        <AddInitialPatientNote
+                            noteList={noteList}
+                            setNoteList={setNoteList}
+                            patientId={patientId}
+                        />
+                    }
 
                     <button type="submit">
                         Submit
