@@ -29,7 +29,7 @@ function SinglePatientPage() {
 
         setTimeout(() => {
             setLoading(false)
-        }, 4000)
+        }, 1000)
     }, [dispatch, id])
 
     if (loading) return "Loading Patient Information..."
