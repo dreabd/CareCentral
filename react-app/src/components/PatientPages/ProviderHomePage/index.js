@@ -9,10 +9,12 @@ import AddPatientModal from "../AddPatientModal";
 // Thunks
 import { getAllPatientsThunk } from "../../../store/patient";
 
-
 // Components
 import FilterPatients from "./FilterPatients";
 import PatientCard from "./PatientCard";
+
+// CSS
+import "./ProviderHomePage.css"
 
 function ProviderHomePage() {
     const dispatch = useDispatch()
@@ -58,7 +60,7 @@ function ProviderHomePage() {
                     />
                 </li>
                 <PatientCard
-                    patients={(Object.values(allPatients))} 
+                    patients={(Object.values(allPatients))}
                     filters={filters}
                     setFilteredPatients={setFilteredPatients}
                     filteredPatients={filteredPatients}

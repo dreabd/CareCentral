@@ -1,0 +1,64 @@
+/* Class for yellow tint */
+.status-inquiry,
+.status-onboarding {
+  background-color: rgba(255, 255, 0, 0.2); /* Yellow tint */
+}
+
+/* Class for green tint */
+.status-active {
+  background-color: rgba(0, 255, 0, 0.2); /* Green tint */
+}
+
+/* Class for grey tint */
+.status-churned {
+  background-color: rgba(169, 169, 169, 0.2); /* Grey tint */
+}
+
+/* Create a grid container */
+.patient-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Adjust the column width as needed */
+  gap: 10px; /* Adjust the gap between cards */
+}
+
+/* Style for each patient card */
+.patient-card {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff; /* Optional: Set a background color */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: Add a box shadow */
+}
+
+/* Style for the left side (patient info) */
+.patient-info {
+  flex: 1; /* Take up available space */
+}
+
+.patient-info a {
+  text-decoration: none;
+  color: #333;
+}
+
+.patient-name {
+  font-size: 16px; /* Smaller font size */
+  font-weight: bold;
+  margin-bottom: 3px; /* Smaller margin */
+}
+
+.patient-address {
+  font-size: 12px; /* Smaller font size */
+}
+
+/* Style for the right side (patient status) */
+.patient-status {
+  background-color: #f0f0f0; /* Optional: Set a background color */
+  padding: 8px; /* Smaller padding */
+  border-radius: 5px;
+  text-align: center;
+  font-size: 14px; /* Smaller font size */
+  font-weight: bold;
+  color: #333;
+}

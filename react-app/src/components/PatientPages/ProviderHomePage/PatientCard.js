@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { useEffect, useState } from "react"; // Import useState for local state
 
-function PatientCard({ patients, filters,setFilteredPatients}) {
+function PatientCard({ patients, filters, setFilteredPatients }) {
   // Local state for filteredPatients
   const [patientCards, setPatientCards] = useState([]);
 
@@ -42,28 +42,43 @@ function PatientCard({ patients, filters,setFilteredPatients}) {
     setFilteredPatients(updatedFilteredPatients)
   }, [patients, filters]); // Add dependencies for the useEffect
 
-  return patientCards.map((patient) => {
+  let cards = patientCards.map((patient) => {
     return (
-      <li key={`${patient.id}`}>
+      <li
+        key={`${patient.id}`}
+        className={`patient-card ${patient.status === 'inquiry' || patient.status === 'onboarding'
+            ? 'status-inquiry'
+            : patient.status === 'active'
+              ? 'status-active'
+              : patient.status === 'churned'
+                ? 'status-churned'
+                : ''
+          }`}>
         {/* left side */}
-        <div>
+        <div className="patient-info">
           <NavLink to={`/patients/${patient.id}`}>
-            <p>
+            <p className="patient-name">
               {patient.last_name}
               {patient?.middle_name && ` ${patient.middle_name}`}, {patient.first_name}
             </p>
           </NavLink>
-          <p>
+          <p className="patient-address">
             {patient.addresses[0].city} {patient.addresses[0].state}
           </p>
         </div>
         {/* right side */}
-        <div>
+        <div className="patient-status">
           <p>{patient.status}</p>
         </div>
       </li>
     );
   });
+
+  return (
+    <div className="patient-grid">
+      {cards}
+    </div>
+  )
 }
 
 export default PatientCard;
