@@ -94,6 +94,18 @@ export const getSinglePatientThunk = (id) => async (dispatch) => {
     }
 }
 
+export const getPatientsSearchThunk = (query) => async (dispatch) => {
+    const res = await fetch(`/api/search?query=${query}`)
+    if (res.ok) {
+        //projects here will be filtered based on the search query
+        const { patients } = await res.json()
+        dispatch(getAllPatients(patients))
+        return
+    } else {
+        console.log("Problem with loading projects with query params")
+    }
+}
+
 export const postNewPatientThunk = (newPatient, newAddress, noteListFormData) => async (dispatch) => {
     const res = await fetch(`/api/patients/`, {
         method: "POST",
@@ -234,7 +246,7 @@ const patient = (state = initialState, action) => {
                 ...state,
                 singlePatient: {
                     ...state.singlePatient,
-                    info: {...information }
+                    info: { ...information }
                 }
             };
 
