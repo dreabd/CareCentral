@@ -9,12 +9,14 @@ import AddPatientModal from "../AddPatientModal";
 // Thunks
 import { getAllPatientsThunk } from "../../../store/patient";
 
-
 // Components
 import FilterPatients from "./FilterPatients";
 import PatientCard from "./PatientCard";
 
-// Helpers 
+// CSS
+import "./ProviderHomePage.css"
+
+// Helpers
 import { priorityListPatients } from "./helpers";
 
 function ProviderHomePage() {
@@ -61,7 +63,7 @@ function ProviderHomePage() {
                     />
                 </li>
                 <PatientCard
-                    patients={!filteredPatients.length ? patients : filteredPatients} 
+                    patients={!filteredPatients.length ? patients : filteredPatients}
                     filters={filters}
                     filteredPatients={filteredPatients}
                 />

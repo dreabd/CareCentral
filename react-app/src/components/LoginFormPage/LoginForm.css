@@ -1,0 +1,41 @@
+.loginPage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh; /* This ensures the content is centered vertically on the whole viewport height */
+}
+
+.loginPage p {
+  font-size: 30px; /* You can adjust the font size as needed */
+  display: flex;
+  flex-direction: column;
+  justify-content: baseline;
+}
+
+.loginPage form {
+  width: 300px; /* You can adjust the width of the form container */
+  text-align: center;
+}
+
+.loginPage ul {
+  list-style: none;
+  padding: 0;
+}
+
+.loginPage label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 18px; /* You can adjust the font size as needed */
+}
+
+.loginPage input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px; /* You can adjust the font size as needed */
+  margin-bottom: 10px;
+}
+
+.loginPage button {
+  padding: 10px 20px;
+  font-size: 18px;
+}
