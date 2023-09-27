@@ -5,7 +5,7 @@ import OpenModalButton from "../../OpenModalButton";
 
 import SearchPatient from "./SearchPatient";
 
-import { validFiltersCreator, filterPatients } from "./helpers";
+import { validFiltersCreator, filterPatients,priorityListPatients } from "./helpers";
 
 function FilterPatients({ patients, setFilter, filters, setFilteredPatients }) {
     const dispatch = useDispatch()
@@ -14,6 +14,7 @@ function FilterPatients({ patients, setFilter, filters, setFilteredPatients }) {
     const [statesDisp, setStateDisp] = useState(false)
     const [cityDisp, setCityDisp] = useState(false)
     const [stausDisp, setStatusDisp] = useState(false)
+
 
     //  ---------- Slice of State Selectors ----------
     const allPatients = useSelector(state => state.patient.allPatients)
@@ -51,17 +52,21 @@ function FilterPatients({ patients, setFilter, filters, setFilteredPatients }) {
             // - OTHERWISE / ELSE
         } else {
             // - Will return all patients from slice of state
-            setFilteredPatients(Object.values(allPatients))
+            setFilteredPatients(priorityListPatients(Object.values(allPatients)))
         }
 
 
     }
 
-    const handClosingDispays = (dispFunction,dispBool) => {
-        if(!dispBool){
+    const toggleDropdown = (stateSetter) => {
+        stateSetter((prevState) => !prevState);
+    };
+
+    const handClosingDispays = (dispFunction, dispBool) => {
+        if (!dispBool) {
             dispFunction(!dispBool)
-        }else{
-            setFilteredPatients(Object.values(allPatients))
+        } else {
+            setFilteredPatients(priorityListPatients(Object.values(allPatients)))
             dispFunction(!dispBool)
         }
     }
@@ -69,58 +74,93 @@ function FilterPatients({ patients, setFilter, filters, setFilteredPatients }) {
     return (
         <div>
             {/* Would be in a line  */}
-            <SearchPatient />
-            <div>
-                <button onClick={() => { handClosingDispays(setStateDisp,statesDisp) }}>State</button>
-                {/* Would Eventually Become Modals */}
-                {statesDisp && Object.entries(validFilters.state).map(([state, count]) => {
-                    return (
-                        <label key={`${state}`} >
-                            <input
-                                type="checkbox"
-                                value={["state", state]}
-                                onChange={e => { !e.target.checked ? handleRemovingFilter(e) : handleAddingFilter(e) }}
+            <div className="filter-container">
+                <div>
+                    <button
+                        className={`filter-button ${statesDisp ? "active" : ""}`}
+                        onClick={() => {
+                            toggleDropdown(setStateDisp)
+                            handClosingDispays(setStateDisp, statesDisp)
+                        }}
+                    >
+                        State
+                    </button>
+                    {/* Dropdown content */}
+                    <div className="filter-dropdown-content">
+                        {statesDisp && Object.entries(validFilters.state).map(([state, count]) => {
+                            return (
+                                <label key={`${state}`}>
+                                    <input
+                                        type="checkbox"
+                                        value={["state", state]}
+                                        onChange={(e) => {
+                                            !e.target.checked ? handleRemovingFilter(e) : handleAddingFilter(e);
+                                        }}
+                                    />
+                                    {`${state}(${count})`}
+                                </label>
+                            );
+                        })}
+                    </div>
+                </div>
+                <div>
+                    <button
+                        className={`filter-button ${cityDisp ? "active" : ""}`}
+                        onClick={() => {
+                            toggleDropdown(setCityDisp)
+                            handClosingDispays(setCityDisp, cityDisp)
+                        }}
+                    >
+                        City
+                    </button>
+                    {/* Dropdown content */}
+                    <div className="filter-dropdown-content">
+                        {cityDisp && Object.entries(validFilters.city).map(([city, count]) => {
+                            return (
+                                <label key={`${city}`}>
+                                    <input
+                                        type="checkbox"
+                                        value={["city", city]}
+                                        onChange={(e) => {
+                                            !e.target.checked ? handleRemovingFilter(e) : handleAddingFilter(e);
+                                        }}
+                                    />
+                                    {`${city}(${count})`}
+                                </label>
+                            );
+                        })}
+                    </div>
+                </div>
+                <div>
+                    <button
+                        className={`filter-button ${stausDisp ? "active" : ""}`}
+                        onClick={() => {
+                            toggleDropdown(setStatusDisp)
+                            handClosingDispays(setStatusDisp, stausDisp)
+                        }}
+                    >
+                        Status
+                    </button>
+                    {/* Dropdown content */}
+                    <div className="filter-dropdown-content">
+                        {stausDisp && Object.entries(validFilters.status).map(([status, count]) => {
+                            return (
+                                <label key={`${status}`}>
+                                    <input
+                                        type="checkbox"
+                                        value={["status", status]}
+                                        onChange={(e) => {
+                                            !e.target.checked ? handleRemovingFilter(e) : handleAddingFilter(e);
+                                        }}
+                                    />
+                                    {`${status}(${count})`}
+                                </label>
+                            );
+                        })}
+                    </div>
+                </div>
+            </div>
 
-                            />
-                            {`${state}(${count})`}
-                        </label>
-                    )
-                })}
-            </div>
-            <div>
-                <button onClick={() => { handClosingDispays(setCityDisp,cityDisp) }}>City</button>
-                {/* Would Eventually Become Modals */}
-                {cityDisp && Object.entries(validFilters.city).map(([city, count]) => {
-                    return (
-                        <label key={`${city}`} >
-                            <input
-                                type="checkbox"
-                                value={["city", city]}
-                                onChange={e => { !e.target.checked ? handleRemovingFilter(e) : handleAddingFilter(e) }}
-
-                            />
-                            {`${city}(${count})`}
-                        </label>
-                    )
-                })}
-            </div>
-            <div>
-                <button onClick={() => {  handClosingDispays(setStatusDisp,stausDisp) }}>Status</button>
-                {/* Would Eventually Become Modals */}
-                {stausDisp && Object.entries(validFilters.status).map(([status, count]) => {
-                    // { status } :{count}
-                    return (
-                        <label key={`${status}`}>
-                            <input
-                                type="checkbox"
-                                value={["status", status]}
-                                onChange={e => { !e.target.checked ? handleRemovingFilter(e) : handleAddingFilter(e) }}
-                            />
-                            {`${status}(${count})`}
-                        </label>
-                    )
-                })}
-            </div>
         </div>
     )
 }

@@ -21,36 +21,55 @@ function LoginFormPage() {
     }
   };
 
+  const handleClickDemoUser = async (e) => {
+    e.preventDefault();
+    const data = await dispatch(login("demo@gmail.com", "password"));
+    if (data) {
+      return setErrors(data);
+    }
+  };
+
   return (
     <div className="loginPage">
-      <p>Log In</p>
+      <p className="login-heading">Log In</p>
       <form onSubmit={handleSubmit}>
         <ul>
           {errors.map((error, idx) => (
-            <li key={idx}>{error}</li>
+            <li key={idx} className="login-error">
+              {error}
+            </li>
           ))}
         </ul>
-        <label>
+        <label className="login-label">
           Email
           <input
             type="text"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            className="login-input"
           />
         </label>
-        <label>
+        <label className="login-label">
           Password
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
+            className="login-input"
           />
         </label>
-        <button type="submit">Log In</button>
+        <button type="submit" className="login-button">
+          Log In
+        </button>
+        <button onClick={handleClickDemoUser} className="demo-button">
+          Demo
+        </button>
       </form>
     </div>
+
+
   );
 }
 

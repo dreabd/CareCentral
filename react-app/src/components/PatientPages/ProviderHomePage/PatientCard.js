@@ -1,19 +1,24 @@
 import { NavLink } from "react-router-dom";
-import { useEffect, useState } from "react"; // Import useState for local state
+import { useEffect, useState } from "react";
+// Import useState for local state
 
-function PatientCard({ patients}) {
+// Modals
+import OpenModalButton from "../../OpenModalButton";
+import AddPatientModal from "../AddPatientModal";
+
+function PatientCard({ patients }) {
 
   let cards = patients.map((patient) => {
     return (
       <li
         key={`${patient.id}`}
-        className={`patient-card ${patient.status === 'inquiry' || patient.status === 'onboarding'
-            ? 'status-inquiry'
-            : patient.status === 'active'
-              ? 'status-active'
-              : patient.status === 'churned'
-                ? 'status-churned'
-                : ''
+        className={`patient-card ${patient.status.toLowerCase() === 'inquiry' || patient.status.toLowerCase() === 'onboarding'
+          ? 'status-inquiry'
+          : patient.status.toLowerCase() === 'active'
+            ? 'status-active'
+            : patient.status.toLowerCase() === 'churned'
+              ? 'status-churned'
+              : ''
           }`}>
         {/* left side */}
         <div className="patient-info">
@@ -38,6 +43,12 @@ function PatientCard({ patients}) {
   return (
     <div className="patient-grid">
       {cards}
+      <li className="add-patient-button">
+        <OpenModalButton
+          buttonText={<span className="add-button-text"><i className="icon-plus"></i> Add Patient</span>}
+          modalComponent={<AddPatientModal />}
+        />
+      </li>
     </div>
   )
 }

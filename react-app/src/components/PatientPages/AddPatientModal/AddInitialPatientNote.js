@@ -31,7 +31,7 @@ function AddInitialPatientNote({ noteList, setNoteList, patientId }) {
             {/* // Clicking the add button would then starting creating input fields  */}
             {/* // *** Based off of however many times they click ***  */}
             {noteList.length >= 1 &&
-                <h3>Add Notes</h3>
+                <h4>Add Notes</h4>
             }
             {noteList.map((note, index) =>
                 <AddNote
@@ -44,8 +44,11 @@ function AddInitialPatientNote({ noteList, setNoteList, patientId }) {
                 />
 
             )}
+            {/* Limiting it to two times but coule be changed */}
             {noteList.length <= 1 &&
-                <button onClick={handleNoteListAdd}>
+                <button
+                    className="form-button"
+                    onClick={handleNoteListAdd}>
                     Add Note
                 </button>
 

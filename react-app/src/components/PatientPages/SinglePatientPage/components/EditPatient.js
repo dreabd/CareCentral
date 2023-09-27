@@ -6,7 +6,7 @@ function EditPatient({
   edittedPatient,
   patientId
 }) {
-
+  setEditPatient(true)
   return (
     <AddPatientModal
       editPatientBool={edit}

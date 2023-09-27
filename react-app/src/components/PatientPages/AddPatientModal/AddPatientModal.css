@@ -1,0 +1,100 @@
+/* Style for the form container */
+.form-container,
+.input-form-container {
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 30px;
+    overflow-y: scroll;
+    height: 40rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .input-form-container{
+    height: fit-content;
+    margin:1rem rem;
+  }
+  
+  /* Style for form headings */
+  .form-heading {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  /* Style for form labels */
+  .form-label {
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  /* Style for form input fields */
+  .form-input {
+    width: 96%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    font-size: 16px;
+  }
+  
+  /* Style for the optional text in form labels */
+  .optional-text {
+    font-size: 14px;
+    color: #666;
+  }
+  
+  /* Style for form select inputs */
+  .form-select {
+    width: 95%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    font-size: 16px;
+  }
+  
+  /* Style for form buttons */
+  .form-submit {
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+  }
+  .form-button{
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-bottom: 1rem;
+    width: fit-content;
+    transition: background-color 0.3s;
+  }
+
+  .button-container{
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+  }
+  
+  /* Add hover effect for form buttons */
+  .form-button:hoverm
+  .form-submit:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Style for the error messages */
+  .error-message {
+    color: #ff0000;
+    font-size: 14px;
+  }
+  

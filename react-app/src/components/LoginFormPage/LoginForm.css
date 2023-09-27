@@ -1,41 +1,72 @@
+/* Style for the login container */
 .loginPage {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 100vh; /* This ensures the content is centered vertically on the whole viewport height */
+  gap: 20px; /* Adjust the gap between elements */
+  padding: 20px; /* Add padding for spacing */
+  border-radius: 5px;
+  background-color: #fff; /* Background color for the container */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.loginPage p {
-  font-size: 30px; /* You can adjust the font size as needed */
-  display: flex;
-  flex-direction: column;
-  justify-content: baseline;
+/* Style for headings */
+.login-heading {
+  font-size: 24px; /* Adjust the font size */
+  font-weight: bold;
+  margin: 0;
 }
 
-.loginPage form {
-  width: 300px; /* You can adjust the width of the form container */
-  text-align: center;
+/* Style for error messages */
+.login-error {
+  color: #ff0000; /* Error text color */
 }
 
-.loginPage ul {
-  list-style: none;
-  padding: 0;
+/* Style for labels */
+.login-label {
+  font-size: 16px; /* Adjust the font size */
+  font-weight: bold;
 }
 
-.loginPage label {
-  display: block;
-  margin-bottom: 10px;
-  font-size: 18px; /* You can adjust the font size as needed */
-}
-
-.loginPage input {
+/* Style for input fields */
+.login-input {
   width: 100%;
   padding: 10px;
-  font-size: 16px; /* You can adjust the font size as needed */
-  margin-bottom: 10px;
+  border: 1px solid #ccc; /* Input border */
+  border-radius: 5px;
+  font-size: 16px; /* Adjust the font size */
 }
 
-.loginPage button {
-  padding: 10px 20px;
-  font-size: 18px;
+/* Style for the submit button */
+.login-button {
+  background-color: #007BFF; /* Button background color */
+  color: #fff; /* Button text color */
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px; /* Adjust padding as needed */
+  cursor: pointer;
+  font-size: 16px; /* Adjust the font size */
+  transition: background-color 0.3s;
+}
+
+/* Add hover effect for the submit button */
+.login-button:hover {
+  background-color: #0056b3; /* Change background color on hover */
+}
+
+/* Style for the demo button */
+.demo-button {
+  background-color: #ccc; /* Demo button background color */
+  color: #000; /* Demo button text color */
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px; /* Adjust padding as needed */
+  cursor: pointer;
+  font-size: 16px; /* Adjust the font size */
+  transition: background-color 0.3s;
+}
+
+/* Add hover effect for the demo button */
+.demo-button:hover {
+  background-color: #999; /* Change background color on hover */
 }

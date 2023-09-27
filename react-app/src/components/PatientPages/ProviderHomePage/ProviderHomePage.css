@@ -1,40 +1,104 @@
+/* Style for the main container */
+.component-container {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 1.5rem;
+}
+
+/* Style for the title */
+.component-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* Style for the filter section */
+.filter-section {
+  margin-bottom: 20px;
+}
+
+/* Style for the list */
+.component-list {
+  margin-top: 20px;
+  list-style: none;
+  padding: 0;
+}
+
+/* Style for list items (e.g., cards) */
+.component-list-item {
+  margin-bottom: 20px;
+}
+
+
+/* -------------------- Patient Card Styles -------------------- */
+/* Style for the card container */
+.card-container {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+/* Style for the card heading */
+.card-heading {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
 /* Class for yellow tint */
 .status-inquiry,
 .status-onboarding {
-  background-color: rgba(255, 255, 0, 0.2); /* Yellow tint */
+  background-color: rgba(255, 255, 0, 0.137);
+  /* Yellow tint */
 }
 
 /* Class for green tint */
 .status-active {
-  background-color: rgba(0, 255, 0, 0.2); /* Green tint */
+  background-color: rgba(0, 255, 0, 0.2);
+  /* Green tint */
 }
 
 /* Class for grey tint */
 .status-churned {
-  background-color: rgba(169, 169, 169, 0.2); /* Grey tint */
+  background-color: rgba(169, 169, 169, 0.658);
+  /* Grey tint */
 }
 
 /* Create a grid container */
 .patient-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Adjust the column width as needed */
-  gap: 10px; /* Adjust the gap between cards */
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 10px;
 }
 
 /* Style for each patient card */
-.patient-card {
+.patient-card,
+.add-patient-button {
   display: flex;
   flex-direction: column;
+  /* gap: 12px; */
+  overflow:hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  justify-content: space-between;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 8px;
-  background-color: #fff; /* Optional: Set a background color */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: Add a box shadow */
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 100%;
 }
 
 /* Style for the left side (patient info) */
 .patient-info {
-  flex: 1; /* Take up available space */
+  display: flex;
+  flex-direction: column;
 }
 
 .patient-info a {
@@ -42,23 +106,140 @@
   color: #333;
 }
 
-.patient-name {
-  font-size: 16px; /* Smaller font size */
+.patient-name,
+.add-patient-text {
+  font-size: 16px;
   font-weight: bold;
-  margin-bottom: 3px; /* Smaller margin */
+  margin-bottom: 3px;
 }
 
+
 .patient-address {
-  font-size: 12px; /* Smaller font size */
+  font-size: 12px;
+  /* Smaller font size */
 }
 
 /* Style for the right side (patient status) */
 .patient-status {
-  background-color: #f0f0f0; /* Optional: Set a background color */
-  padding: 8px; /* Smaller padding */
+  background-color: #f0f0f0;
+  /* Optional: Set a background color */
+  padding: 8px;
+  /* Smaller padding */
   border-radius: 5px;
   text-align: center;
-  font-size: 14px; /* Smaller font size */
+  font-size: 14px;
+  /* Smaller font size */
   font-weight: bold;
   color: #333;
+}
+
+/* Reseting the style for the Add Patient Button*/
+.add-patient-button>* {
+  color: inherit;
+  border: none;
+  background: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Centering the Test to the Middle */
+.add-patient-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.add-patient-button:hover {
+  background-color: #007BFF;
+  transition: background-color 0.3s;
+  color: white;
+  cursor: pointer;
+}
+
+/* -------------------- Fiter Styles -------------------- */
+/* Style for the container */
+.filter-container {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Style for the dropdown button */
+.filter-button {
+  background-color: #007BFF;
+  color: #fff;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+/* Style for the active dropdown button */
+.filter-button.active {
+  background-color: #0056b3;
+}
+
+/* Style for the dropdown content (initially hidden) */
+.filter-dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #fff;
+  min-width: 30px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  z-index: 1;
+}
+
+/* Style for the dropdown items */
+.filter-dropdown-content label {
+  display: block;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+/* Show the dropdown content when the button is clicked or hovered over */
+.filter-button.active+.filter-dropdown-content,
+.filter-button:hover+.filter-dropdown-content {
+  display: block;
+}
+/* -------------------- Search Bar Styles -------------------- */
+
+/* Style for the search bar container */
+.search-bar-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 5px;
+  background-color: #fff;
+}
+
+/* Style for the search bar input */
+.search-bar {
+  flex-grow: 1;
+  border: none;
+  font-size: 16px;
+  padding: 5px;
+  outline: none;
+}
+
+/* Style for the search button */
+.search-button {
+  background-color: #007BFF;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 16px;
+  outline: none;
+  transition: background-color 0.3s;
+}
+
+/* Add hover effect for the search button */
+.search-button:hover {
+  background-color: #0056b3;
 }

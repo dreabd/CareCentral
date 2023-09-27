@@ -1,0 +1,65 @@
+/* Style for the sign-up container */
+.signup-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px; /* Adjust the gap between elements */
+    padding: 20px; /* Add padding for spacing */
+    border-radius: 5px;
+    background-color: #fff; /* Background color for the container */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Style for the form */
+  .signup-form {
+    width: 100%;
+    max-width: 400px; /* Adjust the maximum width as needed */
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Adjust the gap between form elements */
+  }
+  
+  /* Style for headings */
+  .signup-heading {
+    font-size: 24px; /* Adjust the font size */
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  /* Style for error messages */
+  .signup-error {
+    color: #ff0000; /* Error text color */
+  }
+  
+  /* Style for labels */
+  .signup-label {
+    font-size: 16px; /* Adjust the font size */
+    font-weight: bold;
+  }
+  
+  /* Style for input fields */
+  .signup-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc; /* Input border */
+    border-radius: 5px;
+    font-size: 16px; /* Adjust the font size */
+  }
+  
+  /* Style for the submit button */
+  .signup-button {
+    background-color: #007BFF; /* Button background color */
+    color: #fff; /* Button text color */
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px; /* Adjust padding as needed */
+    cursor: pointer;
+    font-size: 16px; /* Adjust the font size */
+    transition: background-color 0.3s;
+  }
+  
+  /* Add hover effect for the submit button */
+  .signup-button:hover {
+    background-color: #0056b3; /* Change background color on hover */
+  }
+  

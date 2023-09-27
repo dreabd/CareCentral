@@ -2,7 +2,7 @@ import { React, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 
-import { getPatientsSearchThunk } from '../../../store/patient';
+import { getPatientsSearchThunk,getAllPatientsThunk} from '../../../store/patient';
 
 function SearchPatient() {
     const dispatch = useDispatch()
@@ -22,7 +22,9 @@ function SearchPatient() {
                 }}
                 onKeyDown={async (e) => {
                     if (e.key === 'Enter') {
-                        search.length && await dispatch(getPatientsSearchThunk(search))
+                        search.length ?
+                            await dispatch(getPatientsSearchThunk(search)) :
+                            await dispatch(getAllPatientsThunk())
                         history.push("/")
                     }
                 }}
@@ -30,7 +32,9 @@ function SearchPatient() {
             {/* dispatch the search thunk here, passing it e.target.value */}
             <button className='search-button'
                 onClick={async (e) => {
-                    search.length && await dispatch(getPatientsSearchThunk(search))
+                    search.length ?
+                        await dispatch(getPatientsSearchThunk(search)) :
+                        await dispatch(getAllPatientsThunk())
                     history.push("/")
                 }}>
                 <i class="icon-search"></i>

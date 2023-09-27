@@ -2,8 +2,10 @@ import { useState } from "react"
 import { formatDate } from "./helpers"
 
 import EditPatient from "./EditPatient"
+import OpenModalButton from "../../../OpenModalButton"
 
-function PatientInfo({patient}) {
+
+function PatientInfo({ patient }) {
     const [edit, setEdit] = useState(false)
 
     if (edit) return (
@@ -15,17 +17,20 @@ function PatientInfo({patient}) {
         />)
 
     return (
-        <div>
-            {/* Patient Name on Top */}
-            <div>
-                <h3>{patient.first_name}{patient?.middle_name && ` ${patient.middle_name}`} {patient.last_name}</h3>
-                <p>{patient.status}</p>
+        <div className="patient-info-container">
+            <div className="patient-name-section">
+                <div className="patient-name">
+                    <h3>
+                        {patient.first_name}
+                        {patient?.middle_name && ` ${patient.middle_name}`} {patient.last_name}
+                    </h3>
+                <div className="patient-status">{patient.status}</div>
+                </div>
             </div>
-            {/* Patient DOB */}
-            <div>
-                <p>Date of Birth: {formatDate(patient.date_of_birth)}</p>
+            <div className="patient-dob-section">
+                <p className="patient-dob-text">Date of Birth: {formatDate(patient.date_of_birth)}</p>
             </div>
-            <button onClick={() => setEdit(true)}>
+            <button className="edit-button" onClick={() => setEdit(true)}>
                 <i className="fas fa-edit"></i>
             </button>
         </div>

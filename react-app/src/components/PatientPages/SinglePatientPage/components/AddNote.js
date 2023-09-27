@@ -67,11 +67,12 @@ function AddNote({
 
 
     return (
-        <div >
-            {submitted && <span className='errors'>{errors.title}</span>}
+        <div className={`${noteList ? "" : "input-form-container"}`}>
+            {submitted && <span className="error-message">{errors.title}</span>}
             <label >
                 Title
                 <input
+                    className="form-input"
                     name="title"
                     type="text"
                     value={noteList ? intialNote.title : title}
@@ -83,10 +84,11 @@ function AddNote({
                 />
             </label>
 
-            {submitted && <span className='errors'>{errors.text}</span>}
+            {submitted && <span className='error-message'>{errors.text}</span>}
             <label >
                 Text
                 <input
+                    className="form-input"
                     name="text"
                     type="text"
                     value={noteList ? intialNote.text : text}
@@ -97,13 +99,25 @@ function AddNote({
                 />
             </label>
 
-            {!noteList && <button onClick={handleSubmit}type="submit">Add</button>}
-            <button onClick={() => {
-                edittedNote && setEditNote(false)
-                !noteList && setAddNote(false)
-                noteList && handleNoteListRemove(index)
-            }
-            }>{noteList ? "Remove" : "Cancel"}</button>
+            <div className="button-container">
+                {!noteList &&
+                    <button
+                        className="form-button"
+                        onClick={handleSubmit} type="submit">
+                        {edittedNote ? "Edit" : "Add"}
+                    </button>
+                }
+                <button
+                    className="form-button"
+                    onClick={() => {
+                        edittedNote && setEditNote(false)
+                        !noteList && !edittedNote && setAddNote(false)
+                        noteList && handleNoteListRemove(index)
+                    }
+                    }>{noteList ? "Remove" : "Cancel"}
+                </button>
+
+            </div>
         </div>
     )
 }

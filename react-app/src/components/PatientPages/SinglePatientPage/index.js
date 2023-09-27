@@ -9,7 +9,9 @@ import PatientNotes from "./components/PatientNotes";
 import AddNote from "./components/AddNote";
 import AddAddress from "./components/AddAddress";
 import PatientInfo from "./components/PatientInfo";
+import Loading from "../../Loading";
 
+import "./SinglePatient.css"
 function SinglePatientPage() {
     const dispatch = useDispatch()
     const { id } = useParams()
@@ -32,80 +34,82 @@ function SinglePatientPage() {
         }, 1000)
     }, [dispatch, id])
 
-    if (loading) return "Loading Patient Information..."
+    if (loading) return <Loading/>
     if (!singlePatient.info.id) history.push("/")
     return (
-        <div>
+        <div className="main-container">
             {/* General Information */}
-            <div>
-                <PatientInfo
-                    patient={singlePatient.info}
-                />
+            <div className="patient-info">
+                <PatientInfo patient={singlePatient.info} />
             </div>
 
-            {/* Address */}
-            <div>
-                <h3>
-                    Addresss
-                </h3>
-                <ul>
-                    {Object.values(singlePatient.addresses)
-                        .sort((a, b) => (a.current === b.current) ? 0 : a ? 1 : -1)
-                        .map(address =>
-                            <PatientAddresses
-                                address={address}
-                                patientId={singlePatient.info.id}
-                            />)}
-                    {/* Add Patient Address */}
-                    {!addAddress ?
-                        <button onClick={() => { setAddAddress(true) }}>
-                            <i class="icon-plus"></i> Add Patient Address
-                        </button>
-
-                        :
-
-                        <AddAddress
-                            setAddAddress={setAddAddress}
-                            addAddress={addAddress}
-                            patientId={singlePatient.info.id}
-                        />
-
-                    }
-
-                </ul>
-            </div>
-
-            {/* Notes */}
-            <div>
-                <h3>
-                    Notes
-                </h3>
-                <ul>
-                    {
-                        Object.values(singlePatient.notes).map(note =>
-                            <PatientNotes
-                                note={note}
+            <div className="address-notes-section">
+                {/* Address */}
+                <div className="address-section">
+                    <h3> Addresss </h3>
+                    <ul>
+                        {Object.values(singlePatient.addresses)
+                            .sort((a, b) => (a.current === b.current) ? 0 : a ? 1 : -1)
+                            .map(address =>
+                                <PatientAddresses
+                                    address={address}
+                                    patientId={singlePatient.info.id}
+                                />)}
+                        {/* Add Patient Address */}
+                        {!addAddress ?
+                            <button
+                                className="form-button"
+                                onClick={() => { setAddAddress(true) }}
+                            >
+                                <i class="icon-plus"></i> Add Patient Address
+                            </button>
+                            :
+                            <AddAddress
+                                setAddAddress={setAddAddress}
+                                addAddress={addAddress}
                                 patientId={singlePatient.info.id}
                             />
-                        )
-                    }
-                    {/* Add Patient Note */}
-                    {!addNote ?
-                        <button onClick={() => { setAddNote(true) }} >
-                            <i class="icon-plus"></i> Add Patient Note
-                        </button>
+                        }
 
-                        :
+                    </ul>
+                </div>
 
-                        <AddNote
-                            setAddNote={setAddNote}
-                            patientId={singlePatient.info.id}
-                        />
-                    }
-                </ul>
+                {/* Notes */}
+                <div className="notes-section">
+                    <h3>Notes</h3>
+                    <ul>
+                        {
+                            Object.values(singlePatient.notes).map(note =>
+                                <PatientNotes
+                                    note={note}
+                                    patientId={singlePatient.info.id}
+                                />
+                            )
+                        }
+                        {/* Add Patient Note */}
+                        {!addNote ?
+                            <button
+                                className="form-button"
+                                onClick={() => { setAddNote(true) }}
+                            >
+                                <i class="icon-plus"></i> Add Patient Note
+                            </button>
+
+                            :
+
+                            <AddNote
+                                setAddNote={setAddNote}
+                                patientId={singlePatient.info.id}
+                            />
+                        }
+                    </ul>
+
+                </div>
 
             </div>
+
         </div>
+
     )
 
 }

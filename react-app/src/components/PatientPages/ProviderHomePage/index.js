@@ -2,16 +2,14 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-// Modals
-import OpenModalButton from "../../OpenModalButton";
-import AddPatientModal from "../AddPatientModal";
-
 // Thunks
 import { getAllPatientsThunk } from "../../../store/patient";
 
 // Components
 import FilterPatients from "./FilterPatients";
-import PatientCard from "./PatientCard";
+import PatientCard from "./PatientCard";    
+import SearchPatient from "./SearchPatient";
+import Loading from "../../Loading";
 
 // CSS
 import "./ProviderHomePage.css"
@@ -24,8 +22,8 @@ function ProviderHomePage() {
 
     // ---------------- State Variables----------------
     const [loading, setLoading] = useState(true)
-    const [filters, setFilter] = useState({"status":[],"city":[],"state":[]})
-    const [filteredPatients,setFilteredPatients] = useState([])
+    const [filters, setFilter] = useState({ "status": [], "city": [], "state": [] })
+    const [filteredPatients, setFilteredPatients] = useState([])
 
     // ------------ Slice of State Selectors -----------
     const allPatients = useSelector(state => state.patient.allPatients)
@@ -41,13 +39,14 @@ function ProviderHomePage() {
     }, [dispatch])
 
     let patients = priorityListPatients(Object.values(allPatients))
-    if (loading) return "Loading Patients..."
+    if (loading) return <Loading/>
     return (
-        <div>
-            <div>
+        <div className="component-container">
+            <div className="component-title">
                 <p>{user.username}'s Patients</p>
             </div>
-            <div>
+            <div className="filter-container">
+                <SearchPatient />
                 <FilterPatients
                     patients={!filteredPatients.length ? patients : filteredPatients}
                     setFilter={setFilter}
@@ -55,18 +54,15 @@ function ProviderHomePage() {
                     filters={filters}
                 />
             </div>
-            <ul>
-                <li>
-                    <OpenModalButton
-                        buttonText={<span><i class="icon-plus"></i> Add Member</span>}
-                        modalComponent={<AddPatientModal />}
+            <ul className="component-list">
+
+                <ul className="component-list-item">
+                    <PatientCard
+                        patients={!filteredPatients.length ? patients : filteredPatients}
+                        filters={filters}
+                        filteredPatients={filteredPatients}
                     />
-                </li>
-                <PatientCard
-                    patients={!filteredPatients.length ? patients : filteredPatients}
-                    filters={filters}
-                    filteredPatients={filteredPatients}
-                />
+                </ul>
             </ul>
         </div>
     )

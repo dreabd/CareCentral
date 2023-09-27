@@ -10,7 +10,11 @@ import {
     postNewPatientThunk,
     putSinglePatientThunk,
     putPatientAddresssThunk,
-    postPatientAddressThunk } from "../../../store/patient";
+    postPatientAddressThunk
+} from "../../../store/patient";
+
+
+import "./AddPatientModal.css"
 
 const formatDate = (dateString) => {
     if (!dateString) return;
@@ -84,7 +88,7 @@ function AddPatientModal({
 
         if (editAddressBool && !isCurrent && addressCount < 2) errors['current'] = "Must have at least one Current Address"
 
-        if (!addAddressBool && !editAddressBool && (!status || status ==="Select a Status")) errors["status"] = "Invalid Status"
+        if (!addAddressBool && !editAddressBool && (!status || status === "Select a Status")) errors["status"] = "Invalid Status"
         if (!addAddressBool && !editAddressBool && !birthday) errors['birthday'] = "Birthday is required."
         if (!addAddressBool && !editAddressBool && new Date(birthday) > Date.now()) errors['birthday'] = "Invalid Birthday"
 
@@ -163,6 +167,7 @@ function AddPatientModal({
             setErrors(data.errors)
         }
         else {
+            //Future Implementation of InLine Editting as Opposed to Modal ----- 
             addAddressBool && setAddAddress(false)
             editAddressBool && setEditAddress(false)
         }
@@ -182,15 +187,17 @@ function AddPatientModal({
         patientFormData.append("patient_id", patientId)
         patientFormData.append("provider_id", current.id)
 
-        const data = await dispatch(putSinglePatientThunk(patientId,patientFormData))
+        const data = await dispatch(putSinglePatientThunk(patientId, patientFormData))
 
         // debugger
-        if(data){
+        if (data) {
             setErrors(data)
         }
-        else{
-        // debugger
+        else {
+            //Future Implementation of InLine Editting as Opposed to Modal ----- 
             setEditPatient(false)
+            // closeModal()
+
         }
 
     }
@@ -198,56 +205,65 @@ function AddPatientModal({
 
     //  ---------------- React Component -----------------
     return (
-        <form onSubmit={handleSubmit}>
+        <form
+            className={`${
+                (addAddressBool | editAddressBool | editPatientBool) ? 
+                "input-form-container" : "form-container"}`}
+            onSubmit={handleSubmit}>
 
             {/* Logic if we are Adding an Address or a patient */}
             {/* Logic for Editting a Patient */}
             {addAddressBool ? "" :
                 editAddressBool ? "" :
                     <>
-                        <h3> Please enter the following information</h3>
-                        {submitted && <span className='errors'>{errors.firstName}</span>}
-                        <label >
+                        <h2 className="form-heading">Please enter the following information</h2>
+                        {submitted && <span className='error-message'>{errors.firstName}</span>}
+                        <label className="form-label">
                             First Name
                             <input
                                 type="text"
                                 value={firstName}
-                                onChange={e => setFirstName(e.target.value)}
+                                onChange={(e) => setFirstName(e.target.value)}
+                                className="form-input"
                             />
                         </label>
 
-                        {submitted && <span className='errors'>{errors.middleName}</span>}
-                        <label >
-                            <span>Middle Name <p>(optional)</p></span>
+                        {submitted && <span className="error-message">{errors.middleName}</span>}
+                        <label className="form-label">
+                            Middle Name <span className="optional-text">(optional)</span>
                             <input
                                 type="text"
                                 value={middleName}
-                                onChange={e => setMiddleName(e.target.value)}
+                                onChange={(e) => setMiddleName(e.target.value)}
+                                className="form-input"
                             />
                         </label>
 
-                        {submitted && <span className='errors'>{errors.lastName}</span>}
-                        <label >
+
+                        {submitted && <span className='error-message'>{errors.lastName}</span>}
+                        <label className="form-label">
                             Last Name
                             <input
                                 type="text"
                                 value={lastName}
                                 onChange={e => setLastName(e.target.value)}
+                                className="form-input"
                             />
                         </label>
 
-                        {submitted && <span className='errors'>{errors.birthday}</span>}
-                        <label >
+                        {submitted && <span className='error-message'>{errors.birthday}</span>}
+                        <label className="form-label">
                             Date of Birth
                             <input
                                 type="date"
                                 value={birthday}
                                 onChange={e => setBirthday(e.target.value)}
+                                className="form-input"
                             />
                         </label>
 
-                        {submitted && <span className='errors'>{errors.status}</span>}
-                        <label>
+                        {submitted && <span className='error-message'>{errors.status}</span>}
+                        <label className="form-label">
                             Status
                             <select
                                 value={status}
@@ -266,36 +282,39 @@ function AddPatientModal({
             {/* Logic if we are Adding an Address or a Patient */}
             {/* Logic for Editting an Address */}
             {(!editAddressBool && !editPatientBool) ?
-                <h3> Please Enter Your Current Address</h3> :
+                <h4> Please Enter Your Current Address</h4> :
                 ""
             }
             {
                 !editPatientBool &&
                 <>
-                    {submitted && <span className='errors'>{errors.address}</span>}
-                    <label >
+                    {submitted && <span className='error-message'>{errors.address}</span>}
+                    <label className="form-label">
                         Street
                         <input
+                            className="form-input"
                             type="text"
                             value={address}
                             onChange={e => setAddress(e.target.value)}
                         />
                     </label>
 
-                    {submitted && <span className='errors'>{errors.city}</span>}
-                    <label >
+                    {submitted && <span className='error-message'>{errors.city}</span>}
+                    <label className="form-label">
                         City
                         <input
+                            className="form-input"
                             type="text"
                             value={city}
                             onChange={e => setCity(e.target.value)}
                         />
                     </label>
 
-                    {submitted && <span className='errors'>{errors.state}</span>}
-                    <label>
+                    {submitted && <span className='error-message'>{errors.state}</span>}
+                    <label className="form-label">
                         State
                         <input
+                            className="form-input"
                             type="text"
                             value={state.toUpperCase()}
                             onChange={e => setState(e.target.value.toUpperCase())}
@@ -308,11 +327,12 @@ function AddPatientModal({
             {
                 editAddressBool &&
                 <>
-                    {submitted && <span className='errors'>{errors.current}</span>}
+                    {submitted && <span className='error-message'>{errors.current}</span>}
 
-                    <label>
+                    <label className="form-label">
                         Current
                         <input
+                            className="form-input"
                             type="checkbox"
                             value={isCurrent}
                             checked={isCurrent}
@@ -323,28 +343,30 @@ function AddPatientModal({
             }
 
             {(addAddressBool || editAddressBool || editPatientBool) ?
-                <>
+                <div className="button-container">
                     {
-                            <button
-                                onClick={
-                                    editPatientBool ?
-                                        handlePatientEdit
-                                        :
-                                        handleAddressSubmit
-                                }
-                            >
-                                {addAddressBool ? "Add" : "Edit"}
-                            </button>
+                        <button
+                            className="form-button"
+                            onClick={
+                                editPatientBool ?
+                                    handlePatientEdit
+                                    :
+                                    handleAddressSubmit
+                            }
+                        >
+                            {addAddressBool ? "Add" : "Edit"}
+                        </button>
 
                     }
                     <button
+                        className="form-button"
                         onClick={() => {
                             addAddressBool && setAddAddress(false)
                             editAddressBool && setEditAddress(false)
                             editPatientBool && setEditPatient(false)
                         }}>
                         Cancel</button>
-                </>
+                </div>
                 : ""}
 
             {(!addAddressBool && !editAddressBool && !editPatientBool) &&
@@ -355,13 +377,15 @@ function AddPatientModal({
                         patientId={patientId}
                     />
 
-                    <button type="submit">
+                    <button
+                        className="form-submit"
+                        type="submit"
+                    >
                         Submit
                     </button>
 
                 </>
             }
-
 
         </form>
     )
