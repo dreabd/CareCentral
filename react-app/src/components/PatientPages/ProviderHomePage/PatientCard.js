@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"; // Import useState for local state
 
 function PatientCard({ patients}) {
 
-  return patients.map((patient) => {
+  let cards = patients.map((patient) => {
     return (
       <li
         key={`${patient.id}`}
