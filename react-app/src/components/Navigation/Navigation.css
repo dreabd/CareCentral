@@ -23,27 +23,35 @@
 
 /* Navbar container */
 .navbar {
-  background-color: #007BFF; /* Background color */
+  background-color: #007BFF;
+  /* Background color */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px; /* Padding for the navbar */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Box shadow for a subtle elevation effect */
+  padding: 10px 20px;
+  /* Padding for the navbar */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* Box shadow for a subtle elevation effect */
 }
 
 /* Navbar links */
 .navbar a {
-  text-decoration: none; /* Remove underlines from links */
-  color: #fff; /* Text color */
+  text-decoration: none;
+  /* Remove underlines from links */
+  color: #fff;
+  /* Text color */
   font-weight: bold;
   font-size: 2.5rem;
-  margin-right: 20px; /* Spacing between links */
-  transition: color 0.3s; /* Smooth color transition on hover */
+  margin-right: 20px;
+  /* Spacing between links */
+  transition: color 0.3s;
+  /* Smooth color transition on hover */
 }
 
 /* Navbar links on hover */
 .navbar a:hover {
-  color: #0056b3; /* Change color on hover */
+  color: #0056b3;
+  /* Change color on hover */
 }
 
 /* Profile button container */
@@ -67,8 +75,10 @@
 
 /* Profile button on hover */
 .profile-button:hover {
-  background-color: #0056b3; /* Change background color on hover */
-  color: #fff; /* Change text color on hover */
+  background-color: #0056b3;
+  /* Change background color on hover */
+  color: #fff;
+  /* Change text color on hover */
 }
 
 /* Style for the container */
@@ -79,24 +89,30 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px; /* Adjust the gap between list items */
-  font-size: 16px; /* Adjust the font size */
+  gap: 10px;
+  /* Adjust the gap between list items */
+  font-size: 16px;
+  /* Adjust the font size */
 }
 
 /* Style for list items */
 .user-info-container li {
   /* Add desired styles for list items */
-  color: #333; /* Text color */
+  color: #333;
+  /* Text color */
   font-weight: bold;
 }
 
 /* Style for the log-out button */
 .logout-button {
-  background-color: #007BFF; /* Button background color */
-  color: #fff; /* Button text color */
+  background-color: #007BFF;
+  /* Button background color */
+  color: #fff;
+  /* Button text color */
   border: none;
   border-radius: 5px;
-  padding: 10px 20px; /* Adjust padding as needed */
+  padding: 10px 20px;
+  /* Adjust padding as needed */
   cursor: pointer;
   font-size: 16px;
   transition: background-color 0.3s;
@@ -104,5 +120,15 @@
 
 /* Style for the log-out button on hover */
 .logout-button:hover {
-  background-color: #0056b3; /* Change background color on hover */
+  background-color: #0056b3;
+  /* Change background color on hover */
+}
+
+.navlinks {
+  display: flex;
+  flex-direction: column;
+}
+
+.navlinks > * {
+  color: black;
 }
