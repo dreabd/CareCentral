@@ -51,30 +51,20 @@
   margin-bottom: 20px;
 }
 
-/* Class for yellow tint */
-.status-inquiry,
-.status-onboarding {
-  background-color: rgba(255, 255, 0, 0.137);
-  /* Yellow tint */
-}
-
-/* Class for green tint */
-.status-active {
-  background-color: rgba(0, 255, 0, 0.2);
-  /* Green tint */
-}
-
-/* Class for grey tint */
-.status-churned {
-  background-color: rgba(169, 169, 169, 0.658);
-  /* Grey tint */
-}
-
 /* Create a grid container */
 .patient-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 10px;
+}
+
+/* Media query for small screens */
+@media (max-width: 1455px) {
+  .patient-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
 }
 
 /* Style for each patient card */
@@ -83,7 +73,7 @@
   display: flex;
   flex-direction: column;
   /* gap: 12px; */
-  overflow:hidden;
+  overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   justify-content: space-between;
@@ -92,7 +82,7 @@
   border-radius: 8px;
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  height: 100%;
+  margin: 0px 10px;
 }
 
 /* Style for the left side (patient info) */
@@ -165,6 +155,16 @@
   align-items: center;
 }
 
+/* Once it hits  */
+@media (max-width: 600px) {
+  .filter-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+  }
+}
+
 /* Style for the dropdown button */
 .filter-button {
   background-color: #007BFF;
@@ -204,6 +204,7 @@
 .filter-button:hover+.filter-dropdown-content {
   display: block;
 }
+
 /* -------------------- Search Bar Styles -------------------- */
 
 /* Style for the search bar container */
@@ -242,4 +243,23 @@
 /* Add hover effect for the search button */
 .search-button:hover {
   background-color: #0056b3;
+}
+
+/* Class for yellow tint */
+.status-inquiry,
+.status-onboarding {
+  background-color: rgba(255, 255, 0, 0.137);
+  /* Yellow tint */
+}
+
+/* Class for green tint */
+.status-active {
+  background-color: rgba(0, 255, 0, 0.2);
+  /* Green tint */
+}
+
+/* Class for grey tint */
+.status-churned {
+  background-color: rgba(169, 169, 169, 0.658);
+  /* Grey tint */
 }

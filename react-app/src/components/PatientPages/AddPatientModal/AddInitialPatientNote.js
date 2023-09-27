@@ -44,6 +44,7 @@ function AddInitialPatientNote({ noteList, setNoteList, patientId }) {
                 />
 
             )}
+            <hr/>
             {/* Limiting it to two times but coule be changed */}
             {noteList.length <= 1 &&
                 <button
