@@ -11,8 +11,6 @@ function Navigation({ isLoaded }) {
 	const dispatch = useDispatch()
 	const history = useHistory()
 
-
-
 	// ------------ Slice of State Selectors -----------
 	const sessionUser = useSelector(state => state.session.user);
 

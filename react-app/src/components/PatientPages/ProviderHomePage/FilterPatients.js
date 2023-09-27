@@ -5,28 +5,9 @@ import OpenModalButton from "../../OpenModalButton";
 
 import SearchPatient from "./SearchPatient";
 
-function validFiltersCreator(patients) {
-    let validFilters = {
-        "status": {},
-        "city": {},
-        "state": {}
-    }
+import { validFiltersCreator, filterPatients } from "./helpers";
 
-    for (let patient of patients) {
-        let status = patient["status"]
-        status in validFilters["status"] ? validFilters["status"][status] += 1 : validFilters["status"][status] = 1
-        let state = patient['addresses'][0]['state']
-        let city = patient['addresses'][0]['city']
-        state in validFilters["state"] ? validFilters["state"][state] += 1 : validFilters["state"][state] = 1
-        city in validFilters["city"] ? validFilters["city"][city] += 1 : validFilters["city"][city] = 1
-
-
-    }
-
-    return validFilters
-}
-
-function FilterPatients({ patients, setFilter, filters }) {
+function FilterPatients({ patients, setFilter, filters, setFilteredPatients }) {
     const dispatch = useDispatch()
 
     //  --------------- State Variables ---------------
@@ -35,6 +16,7 @@ function FilterPatients({ patients, setFilter, filters }) {
     const [stausDisp, setStatusDisp] = useState(false)
 
     //  ---------- Slice of State Selectors ----------
+    const allPatients = useSelector(state => state.patient.allPatients)
     let validFilters = validFiltersCreator(patients)
 
     /*
@@ -44,33 +26,52 @@ function FilterPatients({ patients, setFilter, filters }) {
     - set Patients to the new filter array of patients  
     */
 
-
     const handleAddingFilter = (e) => {
         // When a check boxed in not checked this function will run and do the following:
         // - extract the filter and the value 
         // - use threaded filter prop and push to its appropiate key
         // - Set Filter to that new value 
-        const [filter, value] = e.target.value.split(",");
-        const updatedFilters = { ...filters };
-        updatedFilters[filter].push(value);
-        setFilter(updatedFilters);
-
+        const [filter, value] = e.target.value.split(",")
+        const updatedFilters = { ...filters }
+        updatedFilters[filter].push(value)
+        setFilter(updatedFilters)
+        setFilteredPatients(filterPatients(patients, filters))
     }
+
     const handleRemovingFilter = (e) => {
-        const [filter, value] = e.target.value.split(",");
-        const updatedFilters = { ...filters };
-        updatedFilters[filter].splice(value, 1);
-        setFilter(updatedFilters);
+        const [filter, value] = e.target.value.split(",")
+        const updatedFilters = { ...filters }
+        updatedFilters[filter].splice(value, 1)
+        setFilter(updatedFilters)
+        // Okay so this one is kinda hacky,
+        // - IF THERE ARE FILTERS 
+        if (Object.values(filters).flat().length) {
+            // -- Will filter patients based off of those filter and send it to the patient cards
+            setFilteredPatients(filterPatients(patients, filters))
+            // - OTHERWISE / ELSE
+        } else {
+            // - Will return all patients from slice of state
+            setFilteredPatients(Object.values(allPatients))
+        }
+
+
     }
 
-
+    const handClosingDispays = (dispFunction,dispBool) => {
+        if(!dispBool){
+            dispFunction(!dispBool)
+        }else{
+            setFilteredPatients(Object.values(allPatients))
+            dispFunction(!dispBool)
+        }
+    }
 
     return (
         <div>
             {/* Would be in a line  */}
             <SearchPatient />
             <div>
-                <button onClick={() => { setStateDisp(!statesDisp) }}>State</button>
+                <button onClick={() => { handClosingDispays(setStateDisp,statesDisp) }}>State</button>
                 {/* Would Eventually Become Modals */}
                 {statesDisp && Object.entries(validFilters.state).map(([state, count]) => {
                     return (
@@ -87,7 +88,7 @@ function FilterPatients({ patients, setFilter, filters }) {
                 })}
             </div>
             <div>
-                <button onClick={() => { setCityDisp(!cityDisp) }}>City</button>
+                <button onClick={() => { handClosingDispays(setCityDisp,cityDisp) }}>City</button>
                 {/* Would Eventually Become Modals */}
                 {cityDisp && Object.entries(validFilters.city).map(([city, count]) => {
                     return (
@@ -104,7 +105,7 @@ function FilterPatients({ patients, setFilter, filters }) {
                 })}
             </div>
             <div>
-                <button onClick={() => { setStatusDisp(!stausDisp) }}>Status</button>
+                <button onClick={() => {  handClosingDispays(setStatusDisp,stausDisp) }}>Status</button>
                 {/* Would Eventually Become Modals */}
                 {stausDisp && Object.entries(validFilters.status).map(([status, count]) => {
                     // { status } :{count}

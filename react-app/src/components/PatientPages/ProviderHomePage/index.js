@@ -14,6 +14,9 @@ import { getAllPatientsThunk } from "../../../store/patient";
 import FilterPatients from "./FilterPatients";
 import PatientCard from "./PatientCard";
 
+// Helpers 
+import { priorityListPatients } from "./helpers";
+
 function ProviderHomePage() {
     const dispatch = useDispatch()
 
@@ -33,10 +36,9 @@ function ProviderHomePage() {
         setTimeout(() => {
             setLoading(false)
         }, 1000)
-    }, [dispatch,filters])
+    }, [dispatch])
 
-
-
+    let patients = priorityListPatients(Object.values(allPatients))
     if (loading) return "Loading Patients..."
     return (
         <div>
@@ -45,8 +47,9 @@ function ProviderHomePage() {
             </div>
             <div>
                 <FilterPatients
-                    patients={!filteredPatients.length ? Object.values(allPatients) : filteredPatients}
+                    patients={!filteredPatients.length ? patients : filteredPatients}
                     setFilter={setFilter}
+                    setFilteredPatients={setFilteredPatients}
                     filters={filters}
                 />
             </div>
@@ -58,9 +61,8 @@ function ProviderHomePage() {
                     />
                 </li>
                 <PatientCard
-                    patients={(Object.values(allPatients))} 
+                    patients={!filteredPatients.length ? patients : filteredPatients} 
                     filters={filters}
-                    setFilteredPatients={setFilteredPatients}
                     filteredPatients={filteredPatients}
                 />
             </ul>
