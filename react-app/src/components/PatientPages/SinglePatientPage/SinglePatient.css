@@ -183,6 +183,7 @@
 /* Style for note text */
 .note-text {
   font-size: 14px;
+  overflow-wrap: normal;
 }
 
 /* Media query for small screens */

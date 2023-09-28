@@ -31,9 +31,9 @@ function PatientNotes({ patientId, note }) {
                     <button className="notes-button" onClick={() => setEdit(true)}>
                         <i className="fas fa-edit"></i>
                     </button>
-                    <button className="notes-button">
+                    {/* <button className="notes-button">
                         <i className="icon-trash"></i>
-                    </button>
+                    </button> */}
                 </div>
             </div>
 

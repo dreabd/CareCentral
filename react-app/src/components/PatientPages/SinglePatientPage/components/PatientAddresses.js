@@ -41,9 +41,9 @@ function PatientAddresses({ address, patientId }) {
                 <button className="address-button" onClick={() => setEdit(true)}>
                     <i className="fas fa-edit"></i>
                 </button>
-                <button className="address-button">
+                {/* <button className="address-button">
                     <i className="icon-trash"></i>
-                </button>
+                </button> */}
             </div>
         </li>
 
