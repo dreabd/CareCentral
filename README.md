@@ -1,8 +1,8 @@
-# Patient Manager
+# CareCentral
 
 This innovative application empowers healthcare professionals to seamlessly manage their patients' data and associated notes, leveraging state-of-the-art technologies like React, Redux, Flask, and SQLAlchemy.
 
-## Check out <a href="https://patient-manager.onrender.com/" target="_blank">Patient Manager</a>
+## Check out <a href="https://patient-manager.onrender.com/" target="_blank">CareCentral</a>
 
 ## Getting started
 1. Clone this repository
