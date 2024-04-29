@@ -11,13 +11,13 @@ ENV SQLALCHEMY_ECHO=true
 # FLASK_ENV -> Tell flask to use the production server
 # SQLALCHEMY_ECHO -> Just set it to true
 
-# Set the directory for upcoming commands to /var/www   
+# Set the directory for upcoming commands to /var/www
 WORKDIR /var/www
 # Copy all the files from your repo to the working directory
 COPY . .
 # Copy the built react app (it's built for us) from the
 # /react-app/build/ directory into your flasks app/static directory
-COPY /react-app/* /app/
+COPY /react-app/build/* app/static/
 # Run the next two python install commands with PIP
 # install -r requirements.txt
 RUN pip install -r requirements.txt
