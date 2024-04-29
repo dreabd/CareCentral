@@ -26,5 +26,5 @@ RUN pip install psycopg2
 # closing command to gunicorn app:app
 CMD gunicorn app:app
 
-RUN flask db upgrade
-RUN flask seed all
+CMD flask db upgrade
+CMD flask seed all
