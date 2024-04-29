@@ -1,7 +1,7 @@
 # Start with the python:3.9 image
 FROM python:3.9
 # Set the following enviroment variables
-ENV REACT_APP_BASE_URL=https://carecentral-production.up.railway.app/
+ENV REACT_APP_BASE_URL=https://carecentral-89f64e05dacc.herokuapp.com/
 ENV FLASK_APP=app
 ENV FLASK_ENV=production
 ENV SQLALCHEMY_ECHO=true
