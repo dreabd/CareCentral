@@ -22,10 +22,10 @@ COPY /react-app/build/* app/static/
 # install -r requirements.txt
 RUN pip install -r requirements.txt
 RUN pip install psycopg2
-
-RUN flask db upgrade
-RUN flask seed all
-
+x   
 # Start the flask environment by setting our
 # closing command to gunicorn app:app
 CMD gunicorn app:app
+
+RUN flask db upgrade
+RUN flask seed all
