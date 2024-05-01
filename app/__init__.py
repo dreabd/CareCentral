@@ -73,3 +73,8 @@ def react_root(path):
     if path == 'favicon.ico':
         return app.send_static_file('favicon.ico')
     return app.send_static_file('index.html')
+
+
+@app.route("/health-check")
+def health_check():
+    return {"Test":"We Good"}
