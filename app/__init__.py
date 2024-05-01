@@ -75,6 +75,6 @@ def react_root(path):
     return app.send_static_file('index.html')
 
 
-@app.route("/")
+@app.route("/check")
 def health_check():
     return {"Test":"We Good"},200
