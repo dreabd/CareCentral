@@ -11,8 +11,9 @@ def users():
     """
     Query for all users and returns them in a list of user dictionaries
     """
-    users = User.query.all()
-    return {'users': [user.to_dict() for user in users]}
+    # users = User.query.all()
+    # return {'users': [user.to_dict() for user in users]}
+    return{"Health Check": "I am checking your health fool"}
 
 
 @user_routes.route('/<int:id>')
